@@ -40,6 +40,11 @@ export default function SignUp() {
   return (
     <div className="p-4 max-w-lg mx-auto pt-36">
       <h1 className="text-3xl text-center font-semibold my-7">Sign Up</h1>
+      {error ? (
+        <p className="text-red-600 font-medium my-2 text-center">{error}</p>
+      ) : (
+        ""
+      )}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           type="text"
@@ -80,7 +85,6 @@ export default function SignUp() {
           <span className="text-blue-700 hover:underline">Sign In</span>
         </Link>
       </div>
-      {error ? <p className="text-red-600 font-medium my-2">{error}</p> : ""}
     </div>
   )
 }
