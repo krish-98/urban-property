@@ -1,4 +1,4 @@
-import { errorHandler } from "../error.js"
+import { errorHandler } from "../utils/error.js"
 import User from "../models/User.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
@@ -54,6 +54,7 @@ export const googleAuth = async (req, res, next) => {
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8)
       const hashedPassword = bcrypt.hashSync(generatedPassword, 10)
+
       const newUser = new User({
         username:
           req.body.name.split(" ").join("").toLowerCase() +

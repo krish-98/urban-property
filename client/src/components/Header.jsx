@@ -41,6 +41,7 @@ export default function Header() {
                 className="rounded-full h-10 w-10 object-cover"
                 src={currentUser?.avatar}
                 alt="user-profile"
+                referrerPolicy="no-referrer"
               />
             ) : (
               <li className="text-slate-700 hover:underline">Sign In</li>
