@@ -3,12 +3,15 @@ import mongoose from "mongoose"
 import dotenv from "dotenv"
 import authRouter from "./routes/authRoutes.js"
 import userRouter from "./routes/userRoutes.js"
+import cookieParser from "cookie-parser"
 dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 3000
 
 app.use(express.json())
+app.use(cookieParser())
+
 app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
 
