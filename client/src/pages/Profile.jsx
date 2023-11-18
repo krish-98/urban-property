@@ -113,7 +113,7 @@ export default function Profile() {
         return
       }
 
-      dispatch(deleteUserSuccess(data))
+      dispatch(signOutUserSuccess(data))
     } catch (error) {
       dispatch(signOutUserFailure(error.message))
     }
