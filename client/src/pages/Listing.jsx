@@ -23,6 +23,7 @@ export default function Listing() {
   const [contact, setContact] = useState(false)
   const { currentUser } = useSelector((state) => state.user)
   const params = useParams()
+  SwiperCore.use([Navigation])
 
   useEffect(() => {
     const fetchListing = async () => {
