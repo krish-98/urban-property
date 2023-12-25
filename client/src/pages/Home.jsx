@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation } from "swiper/modules"
-import SwiperCore from "swiper"
-import "swiper/css/bundle"
-import ListingItem from "../components/ListingItem"
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation } from 'swiper/modules'
+import SwiperCore from 'swiper'
+import 'swiper/css/bundle'
+import ListingItem from '../components/ListingItem'
 
 export default function Home() {
   const [offerListings, setOfferListings] = useState([])
@@ -12,12 +12,10 @@ export default function Home() {
   const [rentListings, setRentListings] = useState([])
   SwiperCore.use([Navigation])
 
-  console.log(saleListings)
-
   useEffect(() => {
     const fetchOfferListings = async () => {
       try {
-        const res = await fetch("/api/listing/get?offer=true&limit=4}")
+        const res = await fetch('/api/listing/get?offer=true&limit=4}')
         const data = await res.json()
         setOfferListings(data)
 
@@ -29,7 +27,7 @@ export default function Home() {
 
     const fetchRentListings = async () => {
       try {
-        const res = await fetch("/api/listing/get?type=rent&limit=4")
+        const res = await fetch('/api/listing/get?type=rent&limit=4')
         const data = await res.json()
         setRentListings(data)
 
@@ -41,7 +39,7 @@ export default function Home() {
 
     const fetchSaleListings = async () => {
       try {
-        const res = await fetch("/api/listing/get?type=sale&limit=4")
+        const res = await fetch('/api/listing/get?type=sale&limit=4')
         const data = await res.json()
         setSaleListings(data)
       } catch (error) {
@@ -68,7 +66,7 @@ export default function Home() {
           We have a wide range of properties for you to choose from.
         </div>
         <Link
-          to={"/search"}
+          to={'/search'}
           className="text-xs sm:text-sm text-blue-800 font-bold hover:underline"
         >
           Let&apos;s get started...
@@ -79,12 +77,12 @@ export default function Home() {
       <Swiper navigation>
         {offerListings &&
           offerListings.length > 0 &&
-          offerListings.map((listing) => (
-            <SwiperSlide>
+          offerListings.map((listing, i) => (
+            <SwiperSlide key={i}>
               <div
                 style={{
                   background: `url(${listing.imageUrls[0]}) center no-repeat`,
-                  backgroundSize: "cover",
+                  backgroundSize: 'cover',
                 }}
                 className="h-[500px]"
                 key={listing._id}
@@ -103,7 +101,7 @@ export default function Home() {
               </h2>
               <Link
                 className="text-sm text-blue-800 hover:underline"
-                to={"/search?offer=true"}
+                to={'/search?offer=true'}
               >
                 Show more offers
               </Link>
@@ -124,7 +122,7 @@ export default function Home() {
               </h2>
               <Link
                 className="text-sm text-blue-800 hover:underline"
-                to={"/search?offer=true"}
+                to={'/search?offer=true'}
               >
                 Recent places for rent
               </Link>
@@ -145,7 +143,7 @@ export default function Home() {
               </h2>
               <Link
                 className="text-sm text-blue-800 hover:underline"
-                to={"/search?offer=true"}
+                to={'/search?offer=true'}
               >
                 Show more offers
               </Link>
