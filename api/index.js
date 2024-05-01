@@ -1,11 +1,13 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+import cookieParser from 'cookie-parser'
+import path from 'path'
 import authRouter from './routes/authRoutes.js'
 import userRouter from './routes/userRoutes.js'
 import listingRouter from './routes/listingRoutes.js'
-import cookieParser from 'cookie-parser'
-import path from 'path'
+import movieRouter from './routes/movieRouter.js'
+
 dotenv.config()
 
 const __dirname = path.resolve()
@@ -19,6 +21,7 @@ app.use(cookieParser())
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/listing', listingRouter)
+app.use('/api/movies', movieRouter)
 
 app.use(express.static(path.join(__dirname, '/client/dist')))
 
@@ -35,9 +38,10 @@ app.use((err, req, res, next) => {
 
 mongoose
   .connect(process.env.MONGODB_URI)
-  .then(() => console.log('Database connection established'))
+  .then(() => {
+    console.log('Database connection established')
+    app.listen(3000, () => {
+      console.log(`Server is running on port ${PORT}`)
+    })
+  })
   .catch((err) => console.log(err))
-
-app.listen(3000, () => {
-  console.log(`Server is running on port ${PORT}`)
-})

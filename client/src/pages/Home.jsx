@@ -10,6 +10,7 @@ export default function Home() {
   const [offerListings, setOfferListings] = useState([])
   const [saleListings, setSaleListings] = useState([])
   const [rentListings, setRentListings] = useState([])
+
   SwiperCore.use([Navigation])
 
   useEffect(() => {
@@ -91,7 +92,7 @@ export default function Home() {
           ))}
       </Swiper>
 
-      {/* listing results for Offer, sale and rent */}
+      {/* Listing results for Offer, sale and rent */}
       <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10">
         {offerListings && offerListings.length > 0 && (
           <div>
