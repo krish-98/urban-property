@@ -18,7 +18,6 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      // default: `https://avatar.iran.liara.run/username?username=${username}`,
     },
   },
   { timestamps: true }

@@ -1,8 +1,4 @@
-import {
-  combineReducers,
-  configureStore,
-  // getDefaultMiddleware,
-} from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import userReducer from '../features/user/userSlice'
 import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
@@ -14,7 +10,6 @@ const persistConfig = {
   storage,
   version: 1,
 }
-
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
