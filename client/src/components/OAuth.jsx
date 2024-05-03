@@ -1,8 +1,8 @@
-import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth"
-import { app } from "../firebase.js"
-import { useDispatch } from "react-redux"
-import { signInSuccess } from "../../features/user/userSlice.js"
-import { useNavigate } from "react-router-dom"
+import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth'
+import { app } from '../firebase.js'
+import { useDispatch } from 'react-redux'
+import { signInSuccess } from '../../features/user/userSlice.js'
+import { useNavigate } from 'react-router-dom'
 
 export default function OAuth() {
   const dispatch = useDispatch()
@@ -15,9 +15,9 @@ export default function OAuth() {
 
       const result = await signInWithPopup(auth, provider)
 
-      const res = await fetch("/api/auth/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: result?.user?.displayName,
           email: result?.user?.email,
@@ -27,9 +27,9 @@ export default function OAuth() {
       const data = await res.json()
 
       dispatch(signInSuccess(data))
-      navigate("/")
+      navigate('/')
     } catch (error) {
-      console.log("Could not sign in with google", error)
+      console.log('Could not sign in with google', error)
     }
   }
 
@@ -37,7 +37,7 @@ export default function OAuth() {
     <button
       onClick={handleGoogleClick}
       type="button"
-      className="bg-red-600 text-white p-3 rounded-lg hover:opacity-90"
+      className="bg-red-600 text-sm md:text-base text-white p-3 rounded-lg hover:opacity-90"
     >
       Continue with Google
     </button>
