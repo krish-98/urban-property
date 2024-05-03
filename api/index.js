@@ -6,7 +6,6 @@ import path from 'path'
 import authRouter from './routes/authRoutes.js'
 import userRouter from './routes/userRoutes.js'
 import listingRouter from './routes/listingRoutes.js'
-import movieRouter from './routes/movieRouter.js'
 
 dotenv.config()
 
@@ -21,7 +20,6 @@ app.use(cookieParser())
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/listing', listingRouter)
-app.use('/api/movies', movieRouter)
 
 app.use(express.static(path.join(__dirname, '/client/dist')))
 

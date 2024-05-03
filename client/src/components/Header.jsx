@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { useSelector } from "react-redux"
-import { FaSearch } from "react-icons/fa"
-import { Link } from "react-router-dom"
+import { useEffect, useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { FaSearch } from 'react-icons/fa'
 
 export default function Header() {
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState('')
   const navigate = useNavigate()
   const { currentUser } = useSelector((store) => store.user)
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search)
-    const searchTermFromUrl = urlParams.get("searchTerm")
+    const searchTermFromUrl = urlParams.get('searchTerm')
     if (searchTermFromUrl) {
       setSearchTerm(searchTermFromUrl)
     }
@@ -21,47 +20,48 @@ export default function Header() {
     e.preventDefault()
 
     const urlParams = new URLSearchParams(window.location.search)
-    urlParams.set("searchTerm", searchTerm)
+    urlParams.set('searchTerm', searchTerm)
     const searchQuery = urlParams.toString()
     navigate(`/search?${searchQuery}`)
   }
 
   return (
-    <header className="bg-slate-200 shadow-md p-3">
+    <header className="bg-white shadow-md px-4 py-3">
       <div className="flex justify-between items-center max-w-6xl mx-auto">
         <Link to="/">
-          <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
-            <span className="text-slate-500">Urban</span>
-            <span className="text-slate-700">Property</span>
+          <h1 className="font-bold text-sm sm:text-xl flex flex-wrap space-x-0.5">
+            <span className="text-[#fb923c]">Urban</span>
+            <span className="text-[#191919]">Property</span>
           </h1>
         </Link>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-slate-100 p-3 rounded-lg flex items-center"
+          className="ring-[#fff7f2] ring-2 p-1.5 md:p-3 rounded-lg flex items-center gap-1.5 "
         >
-          <input
-            type="text"
-            placeholder="Search..."
-            className="bg-transparent focus:outline-none w-24 sm:w-64"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
           <button>
             <FaSearch className="text-slate-600" />
           </button>
+          <input
+            type="text"
+            placeholder="Search"
+            className="bg-transparent focus:outline-none pl-1 w-24 sm:w-64 font-medium placeholder:font-medium"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </form>
 
         <ul className="flex gap-4 items-center">
-          <Link to="/">
-            <li className="hidden sm:inline text-slate-700 hover:underline">
-              Home
-            </li>
+          <Link to="/" className="hidden sm:inline">
+            <li className="font-medium hover:text-slate-600">Home</li>
           </Link>
-          <Link to="/about">
-            <li className="hidden sm:inline text-slate-700 hover:underline">
-              About
-            </li>
+
+          <Link to="/about" className="hidden sm:inline">
+            <li className="font-medium hover:text-slate-600">About</li>
+          </Link>
+
+          <Link to="/listings" className="hidden sm:inline">
+            <li className="font-medium hover:text-slate-600">Listing</li>
           </Link>
 
           <Link to="/profile">
@@ -73,7 +73,9 @@ export default function Header() {
                 referrerPolicy="no-referrer"
               />
             ) : (
-              <li className="text-slate-700 hover:underline">Sign In</li>
+              <li className="bg-[#1a1a1a] text-white px-3 py-1.5 rounded-lg transition-all hover:bg-opacity-80">
+                Sign In
+              </li>
             )}
           </Link>
         </ul>
