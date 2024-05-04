@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { Link } from "react-router-dom"
+import { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
-} from "firebase/storage"
-import { app } from "../firebase"
+} from 'firebase/storage'
+import { app } from '../firebase'
 import {
   updateUserStart,
   updateUserSuccess,
@@ -17,7 +17,9 @@ import {
   signOutUserStart,
   signOutUserSuccess,
   signOutUserFailure,
-} from "../../features/user/userSlice"
+} from '../../features/user/userSlice'
+import { IoCameraReverse } from 'react-icons/io5'
+import { RiDeleteBin2Fill } from 'react-icons/ri'
 
 export default function Profile() {
   const fileRef = useRef(null)
@@ -44,7 +46,7 @@ export default function Profile() {
     const uploadTask = uploadBytesResumable(storageRef, file)
 
     uploadTask.on(
-      "state_changed",
+      'state_changed',
       (snapshot) => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         setFilePercentage(Math.round(progress))
@@ -69,9 +71,9 @@ export default function Profile() {
     try {
       dispatch(updateUserStart())
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       })
@@ -89,10 +91,12 @@ export default function Profile() {
   }
 
   const handleDelete = async () => {
+    alert('Are you want to delete your account?')
+
     try {
       dispatch(deleteUserSuccess())
       const res = await fetch(`/api/user/delete/${currentUser._id}`, {
-        method: "DELETE",
+        method: 'DELETE',
       })
       const data = await res.json()
       if (data.success === false) {
@@ -109,7 +113,7 @@ export default function Profile() {
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart())
-      const res = await fetch("/api/auth/signout")
+      const res = await fetch('/api/auth/signout')
       const data = await res.json()
       if (data.success === false) {
         dispatch(signOutUserFailure(data.message))
@@ -141,7 +145,7 @@ export default function Profile() {
   const handleListingDelete = async (listingId) => {
     try {
       const res = await fetch(` /api/listing/delete/${listingId}`, {
-        method: "DELETE",
+        method: 'DELETE',
       })
       const data = await res.json()
       if (data.success === false) {
@@ -159,21 +163,26 @@ export default function Profile() {
 
   return (
     <div className="p-3 max-w-lg mx-auto pt-28">
-      <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
+      {console.log(file)}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
-          onChange={(e) => setFile(e.target.files[0])}
-          type="file"
-          ref={fileRef}
-          accept="image/*"
-          hidden
-        />
-        <img
+        <div
+          className="self-center relative cursor-pointer"
           onClick={() => fileRef.current.click()}
-          className="rounded-full h-28 w-28 object-cover cursor-pointer self-center"
-          src={formData?.avatar || currentUser?.avatar}
-          alt="user-profile"
-        />
+        >
+          <input
+            onChange={(e) => setFile(e.target.files[0])}
+            type="file"
+            ref={fileRef}
+            accept="image/*"
+            hidden
+          />
+          <img
+            className="rounded-full h-28 w-28 object-cover cursor-pointer"
+            src={formData?.avatar || currentUser?.avatar}
+            alt="user-profile"
+          />
+          <IoCameraReverse className="w-6 h-6 absolute right-0 bottom-[0.5px]" />
+        </div>
 
         <p className="text-sm self-center">
           {fileUploadError ? (
@@ -184,61 +193,86 @@ export default function Profile() {
             <span className="text-slate-700">{`Uploading ${filePercentage}%`}</span>
           ) : filePercentage === 100 ? (
             <span className="text-green-700">
-              {"Image successfully uploaded"}
+              {'Image successfully uploaded'}
             </span>
           ) : (
-            ""
+            ''
           )}
         </p>
 
-        <input
-          type="text"
-          placeholder="username"
-          id="username"
-          defaultValue={currentUser.username}
-          onChange={handleChange}
-          className="border p-3 rounded-lg"
-        />
-        <input
-          type="email"
-          placeholder="email"
-          id="email"
-          defaultValue={currentUser.email}
-          onChange={handleChange}
-          className="border p-3 rounded-lg"
-        />
-        <input
-          type="password"
-          placeholder="password"
-          id="password"
-          onChange={handleChange}
-          className="border p-3 rounded-lg"
-        />
+        <div className="space-y-4">
+          <div className="flex flex-col gap-2">
+            <label className="pl-1 text-sm md:text-base font-medium">
+              Username
+            </label>
+            <input
+              type="text"
+              placeholder="username"
+              id="username"
+              defaultValue={currentUser.username}
+              onChange={handleChange}
+              className="border p-3 ml-1 text-sm md:text-base rounded-lg focus:outline-2 focus:outline-[#fb923c]"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="pl-1 text-sm md:text-base font-medium">
+              Email
+            </label>
+            <input
+              type="email"
+              placeholder="email"
+              id="email"
+              defaultValue={currentUser.email}
+              onChange={handleChange}
+              className="border p-3 ml-1 text-sm md:text-base rounded-lg focus:outline-2 focus:outline-[#fb923c]"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="pl-1 text-sm md:text-base font-medium">
+              Change Password
+            </label>
+            <input
+              type="password"
+              placeholder="password"
+              id="password"
+              onChange={handleChange}
+              className="border p-3 ml-1 text-sm md:text-base rounded-lg focus:outline-2 focus:outline-[#fb923c]"
+            />
+          </div>
+        </div>
+
         <button
           disabled={loading}
-          className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-90 disabled:opacity-70"
+          className="bg-[#191919] text-sm md:text-base text-white font-medium tracking-wider rounded-lg p-3 my-2 hover:opacity-90 disabled:opacity-70 hover:bg-[#fb923c]"
         >
-          {loading ? "Loading..." : "Update"}
+          {loading ? 'Saving...' : 'Save Changes'}
         </button>
       </form>
-
-      <div className="flex justify-between mt-5">
-        <span onClick={handleDelete} className="text-red-700 cursor-pointer">
+      <button className="flex justify-center items-center mt-5 bg-red-600 w-full p-3 rounded-md gap-1 hover:bg-red-500">
+        <RiDeleteBin2Fill className="fill-white w-5 h-5" />
+        <span
+          onClick={handleDelete}
+          className="text-white cursor-pointer font-medium"
+        >
           Delete account
         </span>
-        <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
+      </button>
+      {/* <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
           Sign out
-        </span>
-      </div>
+        </span> */}
+      {/* 
 
-      <p className="text-red-700 mt-5">{error ? error : ""}</p>
+      <p className="text-red-700 mt-5">{error ? error : ''}</p>
       <p className="text-green-700 mt-5">
-        {updateSuccess ? "User is updated successfully!" : ""}
+        {updateSuccess ? 'User is updated successfully!' : ''}
       </p>
       <button onClick={handleShowListings} className="text-green-700 w-full">
         Show Listings
       </button>
-      <p>{showListingsError ? "Error showing listings" : ""}</p>
+
+      <p>{showListingsError ? 'Error showing listings' : ''}</p>
 
       {userListings && userListings.length > 0 && (
         <div className="flex flex-col gap-4">
@@ -278,7 +312,7 @@ export default function Profile() {
             </div>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   )
 }
