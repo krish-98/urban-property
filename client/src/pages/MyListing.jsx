@@ -7,7 +7,7 @@ import { ClockLoader } from 'react-spinners'
 
 const ListingCard = ({ listing, handleListingDelete }) => {
   return (
-    <div className="flex items-center justify-evenly py-4 mt-4 rounded shadow-md hover:scale-105 transition-all duration-300">
+    <div className="flex items-center justify-evenly py-4 mt-4 rounded shadow-md transition duration-300 hover:scale-105 ">
       <Link
         Link
         to={`/listing/${listing._id}`}

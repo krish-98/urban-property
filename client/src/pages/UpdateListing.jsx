@@ -167,13 +167,20 @@ export default function UpdateListing() {
   }
 
   return (
-    <main className="p-3 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-semibold text-center my-7">
+    <main className="p-4 max-w-4xl mx-auto">
+      <h1 className="text-xl md:text-3xl font-semibold text-center my-7">
         Update a Listing
       </h1>
 
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col sm:flex-row gap-4 md:mt-16 lg:gap-10"
+      >
         <div className="flex flex-col gap-4 flex-1">
+          <p className="font-medium text-[#191919] lg:text-xl">
+            Property Information
+          </p>
+
           <input
             type="text"
             placeholder="Name"
@@ -185,6 +192,7 @@ export default function UpdateListing() {
             onChange={handleChange}
             value={formData.name}
           />
+
           <textarea
             type="text"
             placeholder="Description"
@@ -194,6 +202,7 @@ export default function UpdateListing() {
             onChange={handleChange}
             value={formData.description}
           />
+
           <input
             type="text"
             placeholder="Address"
@@ -324,15 +333,18 @@ export default function UpdateListing() {
           </div>
         </div>
 
+        {/* Image upload section */}
         <div className="flex flex-col gap-4 flex-1">
-          <p className="font-semibold">Images:</p>
+          <p className="font-semibold lg:text-xl">Images:</p>
+
           <span className="font-normal text-gray-600 ml-2">
             The first image will be the cover (max 6)
           </span>
+
           <div className="flex gap-4">
             <input
               onChange={(e) => setFiles(e.target.files)}
-              className="p-3 border border-gray-300 rounded w-full"
+              className="p-3 border border-[#fb9846] border-dashed rounded w-full cursor-pointer"
               type="file"
               id="images"
               accept="image/*"
@@ -352,6 +364,7 @@ export default function UpdateListing() {
             {imageUploadError && imageUploadError}
           </p>
 
+          {/* Map through the uploaded images */}
           {formData.imageUrls.length > 0 &&
             formData.imageUrls.map((url, index) => (
               <div
@@ -372,6 +385,7 @@ export default function UpdateListing() {
                 </button>
               </div>
             ))}
+
           <button
             disabled={loading || uploading}
             className="p-3 bg-[#fb923c] text-white font-semibold tracking-wide rounded-lg transition-all hover:opacity-85 disabled:opacity-80 disabled:cursor-not-allowed"
