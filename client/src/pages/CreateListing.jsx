@@ -204,7 +204,7 @@ export default function CreateListing() {
               <input
                 type="checkbox"
                 id="sale"
-                className="w-5 accent-[#fca259] fill-white"
+                className="w-5 accent-[#fca259]"
                 onChange={handleChange}
                 checked={formData.type === 'sale'}
               />
@@ -215,7 +215,7 @@ export default function CreateListing() {
               <input
                 type="checkbox"
                 id="rent"
-                className="w-5 accent-[#fca259] fill-white"
+                className="w-5 accent-[#fca259]"
                 onChange={handleChange}
                 checked={formData.type === 'rent'}
               />
@@ -226,7 +226,7 @@ export default function CreateListing() {
               <input
                 type="checkbox"
                 id="parking"
-                className="w-5 accent-[#fca259] fill-white"
+                className="w-5 accent-[#fca259]"
                 onChange={handleChange}
                 checked={formData.parking}
               />
@@ -237,7 +237,7 @@ export default function CreateListing() {
               <input
                 type="checkbox"
                 id="furnished"
-                className="w-5 accent-[#fca259] fill-white"
+                className="w-5 accent-[#fca259]"
                 onChange={handleChange}
                 checked={formData.furnished}
               />
@@ -248,7 +248,7 @@ export default function CreateListing() {
               <input
                 type="checkbox"
                 id="offer"
-                className="w-5 accent-[#fca259] fill-white"
+                className="w-5 accent-[#fca259]"
                 onChange={handleChange}
                 checked={formData.offer}
               />
@@ -388,7 +388,7 @@ export default function CreateListing() {
                 <span>Creating... </span>
               </div>
             ) : (
-              'Create listing'
+              'Create Listing'
             )}
           </button>
 

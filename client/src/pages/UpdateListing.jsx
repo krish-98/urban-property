@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
-} from "firebase/storage"
-import { app } from "../firebase"
-import { useSelector } from "react-redux"
-import { useNavigate, useParams } from "react-router-dom"
+} from 'firebase/storage'
+import { app } from '../firebase'
+import { useSelector } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
+import { ClipLoader } from 'react-spinners'
 
 export default function UpdateListing() {
   const [files, setFiles] = useState([])
@@ -15,10 +16,10 @@ export default function UpdateListing() {
   const params = useParams()
   const [formData, setFormData] = useState({
     imageUrls: [],
-    name: "",
-    description: "",
-    address: "",
-    type: "rent",
+    name: '',
+    description: '',
+    address: '',
+    type: 'rent',
     bedrooms: 1,
     bathrooms: 1,
     regularPrice: 50,
@@ -70,11 +71,11 @@ export default function UpdateListing() {
           setUploading(false)
         })
         .catch((err) => {
-          setImageUploadError("Image upload failed (2 mb max per image)")
+          setImageUploadError('Image upload failed (2 mb max per image)')
           setUploading(false)
         })
     } else {
-      setImageUploadError("You can only upload 6 images per listing")
+      setImageUploadError('You can only upload 6 images per listing')
       setUploading(false)
     }
   }
@@ -86,7 +87,7 @@ export default function UpdateListing() {
       const storageRef = ref(storage, fileName)
       const uploadTask = uploadBytesResumable(storageRef, file)
       uploadTask.on(
-        "state_changed",
+        'state_changed',
         (snapshot) => {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100
@@ -110,14 +111,14 @@ export default function UpdateListing() {
   }
 
   const handleChange = (e) => {
-    if (e.target.id === "sale" || e.target.id === "rent") {
+    if (e.target.id === 'sale' || e.target.id === 'rent') {
       setFormData({ ...formData, type: e.target.id })
     }
 
     if (
-      e.target.id === "parking" ||
-      e.target.id === "furnished" ||
-      e.target.id === "offer"
+      e.target.id === 'parking' ||
+      e.target.id === 'furnished' ||
+      e.target.id === 'offer'
     ) {
       setFormData({
         ...formData,
@@ -126,9 +127,9 @@ export default function UpdateListing() {
     }
 
     if (
-      e.target.type === "number" ||
-      e.target.type === "text" ||
-      e.target.type === "textarea"
+      e.target.type === 'number' ||
+      e.target.type === 'text' ||
+      e.target.type === 'textarea'
     ) {
       setFormData({ ...formData, [e.target.id]: e.target.value })
     }
@@ -139,16 +140,16 @@ export default function UpdateListing() {
 
     try {
       if (formData.imageUrls.length < 1)
-        return setError("You must upload at least one image")
+        return setError('You must upload at least one image')
       if (+formData.regularPrice < +formData.discountPrice)
-        return setError("Discount price must be lower than the regular price")
+        return setError('Discount price must be lower than the regular price')
       setLoading(true)
       setError(false)
 
       const res = await fetch(`/api/listing/update/${params.listingId}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ ...formData, userRef: currentUser._id }),
       })
@@ -208,9 +209,9 @@ export default function UpdateListing() {
               <input
                 type="checkbox"
                 id="sale"
-                className="w-5"
+                className="w-5 accent-[#fca259]"
                 onChange={handleChange}
-                checked={formData.type === "sale"}
+                checked={formData.type === 'sale'}
               />
               <span>Sell</span>
             </div>
@@ -218,9 +219,9 @@ export default function UpdateListing() {
               <input
                 type="checkbox"
                 id="rent"
-                className="w-5"
+                className="w-5 accent-[#fca259]"
                 onChange={handleChange}
-                checked={formData.type === "rent"}
+                checked={formData.type === 'rent'}
               />
               <span>Rent</span>
             </div>
@@ -229,7 +230,7 @@ export default function UpdateListing() {
               <input
                 type="checkbox"
                 id="parking"
-                className="w-5"
+                className="w-5 accent-[#fca259]"
                 onChange={handleChange}
                 checked={formData.parking}
               />
@@ -239,7 +240,7 @@ export default function UpdateListing() {
               <input
                 type="checkbox"
                 id="furnished"
-                className="w-5"
+                className="w-5 accent-[#fca259]"
                 onChange={handleChange}
                 checked={formData.furnished}
               />
@@ -249,7 +250,7 @@ export default function UpdateListing() {
               <input
                 type="checkbox"
                 id="offer"
-                className="w-5"
+                className="w-5 accent-[#fca259]"
                 onChange={handleChange}
                 checked={formData.offer}
               />
@@ -341,14 +342,16 @@ export default function UpdateListing() {
               disabled={uploading}
               onClick={handleImageSubmit}
               type="button"
-              className="p-3 text-green-700 border border-green-700 rounded hover:shadow-lg disabled:opacity-80"
+              className="px-6 bg-[#191919] border text-white rounded-lg hover:shadow-lg disabled:opacity-80 disabled:cursor-not-allowed"
             >
-              {uploading ? "Uploading..." : "Upload"}
+              {uploading ? 'Uploading...' : 'Upload'}
             </button>
           </div>
-          <p className="text-red-700 text-sm">
+
+          <p className="text-red-700 text-sm font-medium">
             {imageUploadError && imageUploadError}
           </p>
+
           {formData.imageUrls.length > 0 &&
             formData.imageUrls.map((url, index) => (
               <div
@@ -371,11 +374,19 @@ export default function UpdateListing() {
             ))}
           <button
             disabled={loading || uploading}
-            className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+            className="p-3 bg-[#fb923c] text-white font-semibold tracking-wide rounded-lg transition-all hover:opacity-85 disabled:opacity-80 disabled:cursor-not-allowed"
           >
-            {loading ? "Listing..." : "Update Listing"}
+            {loading ? (
+              <div className="flex justify-center items-center gap-1">
+                <ClipLoader color="#ffffff" size={15} />
+                <span>Updating... </span>
+              </div>
+            ) : (
+              'Update Listing'
+            )}
           </button>
-          {error && <p className="text-red-700 text-sm">{error}</p>}
+
+          {error && <p className="text-red-700 text-sm font-medium">{error}</p>}
         </div>
       </form>
     </main>
