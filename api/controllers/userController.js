@@ -1,22 +1,22 @@
-import bcrypt from "bcrypt"
-import User from "../models/User.js"
-import { errorHandler } from "../utils/error.js"
-import Listing from "../models/Listing.js"
+import bcrypt from 'bcrypt'
+import User from '../models/User.js'
+import { errorHandler } from '../utils/error.js'
+import Listing from '../models/Listing.js'
 
 export const test = (req, res) => {
-  res.json({ message: "API route is working!" })
+  res.json({ message: 'API route is working!' })
 }
 
 export const updateUser = async (req, res, next) => {
   if (req.user.id !== req.params.id)
-    return next(errorHandler(401, "You can only update your own account!"))
+    return next(errorHandler(401, 'You can only update your own account!'))
 
   try {
     if (req.body.password) {
       req.body.password = bcrypt.hashSync(req.body.password, 10)
     }
 
-    // Don't do it like this $set: {...req.body} it causes problems. Also dont't forget to add {ne: true}
+    // Don't do it like this $set: {...req.body} it causes problems. Also dont't forget to add {new: true}
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
@@ -39,12 +39,12 @@ export const updateUser = async (req, res, next) => {
 
 export const deleteUser = async (req, res, next) => {
   if (req.user.id !== req.params.id)
-    return next(errorHandler(401, "You can only delete your own account!"))
+    return next(errorHandler(401, 'You can only delete your own account!'))
 
   try {
     await User.findByIdAndDelete(req.params.id)
-    res.clearCookie("access_token")
-    res.status(200).json({ message: "User deleted successfully" })
+    res.clearCookie('access_token')
+    res.status(200).json({ message: 'User deleted successfully' })
   } catch (error) {
     next(error)
   }
@@ -59,7 +59,7 @@ export const getUserLisitng = async (req, res, next) => {
       next(error)
     }
   } else {
-    return next(errorHandler(401, "You can only view your own listings!"))
+    return next(errorHandler(401, 'You can only view your own listings!'))
   }
 }
 
@@ -68,7 +68,7 @@ export const getUser = async (req, res, next) => {
     const user = await User.findById(req.params.id)
 
     if (!user) {
-      return next(errorHandler(404, "User not found"))
+      return next(errorHandler(404, 'User not found'))
     }
 
     const { password: pass, ...rest } = user._doc

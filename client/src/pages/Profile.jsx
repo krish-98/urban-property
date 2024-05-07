@@ -28,10 +28,11 @@ export default function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false)
   const [formData, setFormData] = useState({})
   const [updateSuccess, setUpdateSuccess] = useState(false)
-  const { currentUser, loading, error } = useSelector((store) => store.user)
   const [showListingsError, setShowListingsError] = useState(false)
   const [userListings, setUserListings] = useState(false)
+
   const dispatch = useDispatch()
+  const { currentUser, loading, error } = useSelector((store) => store.user)
 
   useEffect(() => {
     if (file) {
@@ -68,6 +69,7 @@ export default function Profile() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
     try {
       dispatch(updateUserStart())
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
@@ -110,60 +112,8 @@ export default function Profile() {
     }
   }
 
-  const handleSignOut = async () => {
-    try {
-      dispatch(signOutUserStart())
-      const res = await fetch('/api/auth/signout')
-      const data = await res.json()
-      if (data.success === false) {
-        dispatch(signOutUserFailure(data.message))
-        return
-      }
-
-      dispatch(signOutUserSuccess(data))
-    } catch (error) {
-      dispatch(signOutUserFailure(error.message))
-    }
-  }
-
-  const handleShowListings = async () => {
-    try {
-      setShowListingsError(false)
-      const res = await fetch(`/api/user/listings/${currentUser._id}`)
-      const data = await res.json()
-      if (data.success === false) {
-        setShowListingsError(true)
-        return
-      }
-
-      setUserListings(data)
-    } catch (error) {
-      setShowListingsError(true)
-    }
-  }
-
-  const handleListingDelete = async (listingId) => {
-    try {
-      const res = await fetch(` /api/listing/delete/${listingId}`, {
-        method: 'DELETE',
-      })
-      const data = await res.json()
-      if (data.success === false) {
-        console.log(data.message)
-        return
-      }
-
-      setUserListings((prev) =>
-        prev.filter((listing) => listing._id !== listingId)
-      )
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-
   return (
     <div className="p-3 max-w-lg mx-auto pt-28">
-      {console.log(file)}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div
           className="self-center relative cursor-pointer"
@@ -198,6 +148,10 @@ export default function Profile() {
           ) : (
             ''
           )}
+        </p>
+
+        <p className="text-sm self-center text-red-700 font-medium">
+          {error && error}
         </p>
 
         <div className="space-y-4">
@@ -250,69 +204,15 @@ export default function Profile() {
           {loading ? 'Saving...' : 'Save Changes'}
         </button>
       </form>
-      <button className="flex justify-center items-center mt-5 bg-red-600 w-full p-3 rounded-md gap-1 hover:bg-red-500">
+      <button
+        onClick={handleDelete}
+        className="flex justify-center items-center mt-5 bg-red-600 w-full p-3 rounded-md gap-1 hover:bg-red-500"
+      >
         <RiDeleteBin2Fill className="fill-white w-5 h-5" />
-        <span
-          onClick={handleDelete}
-          className="text-white cursor-pointer font-medium"
-        >
+        <span className="text-white cursor-pointer font-medium">
           Delete account
         </span>
       </button>
-      {/* <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
-          Sign out
-        </span> */}
-      {/* 
-
-      <p className="text-red-700 mt-5">{error ? error : ''}</p>
-      <p className="text-green-700 mt-5">
-        {updateSuccess ? 'User is updated successfully!' : ''}
-      </p>
-      <button onClick={handleShowListings} className="text-green-700 w-full">
-        Show Listings
-      </button>
-
-      <p>{showListingsError ? 'Error showing listings' : ''}</p>
-
-      {userListings && userListings.length > 0 && (
-        <div className="flex flex-col gap-4">
-          <h1 className="text-center mt-7 text-2xl font-semibold">
-            Your Listings
-          </h1>
-          {userListings.map((listing) => (
-            <div
-              key={listing._id}
-              className="border rounded-lg p-3 flex justify-between items-center gap-4"
-            >
-              <Link to={`/listing/${listing._id}`}>
-                <img
-                  src={listing.imageUrls[0]}
-                  alt="listing cover"
-                  className="h-16 w-16 object-contain"
-                />
-              </Link>
-              <Link
-                to={`/listing/${listing._id}`}
-                className="text-slate-700 font-semibold hover:underline truncate flex-1"
-              >
-                <p>{listing.name}</p>
-              </Link>
-
-              <div className="flex flex-col items-center">
-                <button
-                  onClick={() => handleListingDelete(listing._id)}
-                  className="text-red-700 uppercase"
-                >
-                  Delete
-                </button>
-                <Link to={`/update-listing/${listing._id}`}>
-                  <button className="text-green-700 uppercase">Edit</button>
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-      )} */}
     </div>
   )
 }
