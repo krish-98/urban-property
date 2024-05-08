@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Header from './components/Header'
 import PrivateRoute from './components/PrivateRoute'
 import Home from './pages/Home'
@@ -10,16 +10,25 @@ import CreateListing from './pages/CreateListing'
 import UpdateListing from './pages/UpdateListing'
 import Listing from './pages/Listing'
 import Search from './pages/Search'
-import MyListing from './components/MyListing'
+import MyListing from './pages/MyListing'
+import { useSelector } from 'react-redux'
 
 export default function App() {
+  const { currentUser } = useSelector((state) => state.user)
+
   return (
     <BrowserRouter>
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
+        <Route
+          path="/sign-in"
+          element={!currentUser?._id ? <SignIn /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/sign-up"
+          element={!currentUser?._id ? <SignUp /> : <Navigate to="/" />}
+        />
         <Route path="/about" element={<About />} />
         <Route path="/search" element={<Search />} />
         <Route path="/listing/:listingId" element={<Listing />} />
