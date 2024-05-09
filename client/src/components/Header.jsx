@@ -17,7 +17,7 @@ export default function Header() {
   const { currentUser } = useSelector((store) => store.user)
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(location.search)
+    const urlParams = new URLSearchParams(window.location.search)
     const searchTermFromUrl = urlParams.get('searchTerm')
     if (searchTermFromUrl) {
       setSearchTerm(searchTermFromUrl)
@@ -63,13 +63,11 @@ export default function Header() {
           </h1>
         </Link>
 
+        {/* Search bar */}
         <form
           onSubmit={handleSubmit}
-          className="ring-[#fff7f2] ring-2 p-1.5 md:p-3 rounded-lg flex items-center gap-1.5 "
+          className="ring-[#fff7f2] ring-2 p-1.5 md:p-3 rounded-lg flex items-center gap-1.5"
         >
-          <button>
-            <FaSearch className="text-slate-600" />
-          </button>
           <input
             type="text"
             placeholder="Search"
@@ -77,6 +75,9 @@ export default function Header() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          <button>
+            <FaSearch className="text-slate-600" />
+          </button>
         </form>
 
         <ul className="flex gap-4 items-center">

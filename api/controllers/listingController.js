@@ -96,7 +96,7 @@ export const getListings = async (req, res, next) => {
     const order = req.query.order || 'desc'
 
     const listings = await Listing.find({
-      name: { $regex: searchTerm, $options: 'i' },
+      name: { $regex: searchTerm, $options: 'i' }, //regex => show wherther somepart the words are present in the search term, options => don't care about the uppercase or lowercase in the search
       offer,
       furnished,
       parking,
