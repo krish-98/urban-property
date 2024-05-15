@@ -60,9 +60,9 @@ export default function Home() {
     fetchOfferListings()
   }, [])
   return (
-    <div>
+    <>
       {/* Header */}
-      <section className="bg-[#fff7f2]">
+      <header className="bg-[#fff7f2]">
         <div className="max-w-6xl mx-auto bg-[#fff7f2] py-16 flex flex-col md:flex-row gap-8 items-center">
           <div className="px-8 space-y-4">
             <h1 className="text-2xl font-bold lg:text-[2.5rem] leading-tight">
@@ -90,7 +90,7 @@ export default function Home() {
             />
           </div>
         </div>
-      </section>
+      </header>
 
       {/* Mid */}
       <section>
@@ -137,40 +137,87 @@ export default function Home() {
           <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 py-14 xl:justify-between">
             <div className="space-y-1">
               <AiOutlineDollar size={25} className="fill-[#fc670f]" />
-              <p className="font-semibold text-lg md:text-xl">5.4M</p>
-              <p className="text-slate-600 text-sm">Owned from</p>
-              <p className="text-slate-600 text-sm">Properties tranactions</p>
+              <p className="font-semibold text-lg md:text-xl lg:text-2xl">
+                5.4M
+              </p>
+              <p className="text-slate-600 text-sm ">Owned from</p>
+              <p className="text-slate-600 text-sm ">Properties tranactions</p>
             </div>
             <div className="space-y-1">
               <FaMapLocationDot size={25} className="fill-[#fc670f]" />
-              <p className="font-semibold text-lg md:text-xl">25k+</p>
-              <p className="text-slate-600 text-sm">
+              <p className="font-semibold text-lg md:text-xl lg:text-2xl">
+                25k+
+              </p>
+              <p className="text-slate-600 text-sm ">
                 Properties for Buy & Sell
               </p>
-              <p className="text-slate-600 text-sm">Successfully</p>
+              <p className="text-slate-600 text-sm ">Successfully</p>
             </div>
             <div className="space-y-1">
               <FaFireAlt size={25} className="fill-[#fc670f]" />
-              <p className="font-semibold text-lg md:text-xl">500</p>
-              <p className="text-slate-600 text-sm">Daily completed</p>
-              <p className="text-slate-600 text-sm">tranactions</p>
+              <p className="font-semibold text-lg md:text-xl lg:text-2xl">
+                500
+              </p>
+              <p className="text-slate-600 text-sm ">Daily completed</p>
+              <p className="text-slate-600 text-sm ">tranactions</p>
             </div>
             <div className="space-y-1">
               <PiMaskHappy size={25} className="fill-[#fc670f]" />
-              <p className="font-semibold text-lg md:text-xl">600</p>
-              <p className="text-slate-600 text-sm">Regular Clients</p>
-              <p className="text-slate-600 text-sm"></p>
+              <p className="font-semibold text-lg md:text-xl lg:text-2xl">
+                600
+              </p>
+              <p className="text-slate-600 text-sm ">Regular Clients</p>
+              <p className="text-slate-600 text-sm "></p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Featured Properties */}
-      <section></section>
+      <main></main>
 
       {/* Footer */}
-      <section></section>
-    </div>
+      <footer>
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center py-20 gap-10 px-10">
+          <div className="space-y-1 w-[300px] h-[200px]">
+            <Link to="/">
+              <h1 className="font-bold text-sm sm:text-xl flex flex-wrap space-x-0.5 text-center">
+                <span className="text-[#fb923c]">Urban</span>
+                <span className="text-[#191919]">Property</span>
+              </h1>
+            </Link>
+            <p>59 Bervely Hill Ave. Brooklyn Town,</p>
+            <p> New York, NY 5630, CA, US</p>
+            <p>+(123) 456-7890</p>
+            <p>urbanproperty@gmail.com</p>
+          </div>
+
+          <div className="space-y-1 w-[300px] h-[200px]">
+            <h3 className="font-semibold">Features</h3>
+            <p>Home</p>
+            <p>Apartments</p>
+            <p>About</p>
+            <p>Contact</p>
+          </div>
+
+          <div className="space-y-1 w-[300px] h-[200px]">
+            <h3 className="font-semibold">Information</h3>
+            <p>Listings v1</p>
+            <p>Listings v2</p>
+            <p>Property Details</p>
+            <p>Profile</p>
+          </div>
+
+          <div className="space-y-1 w-[300px] h-[200px]">
+            <h3 className="font-semibold">Documentation</h3>
+            <p>Blog</p>
+            <p>FAQ</p>
+            <p>Privacy Policy</p>
+            <p>License</p>
+          </div>
+        </div>
+      </footer>
+    </>
   )
 }
 
