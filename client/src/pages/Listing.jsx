@@ -57,10 +57,18 @@ export default function Listing() {
 
   return (
     <main className="bg-[#fffaf7]">
-      {loading && <p className="text-center my-7 text-2xl">Loading...</p>}
+      {loading && (
+        <div className="h-[calc(100vh-64px)] flex items-center justify-center">
+          <p className="text-center my-7 text-2xl bg-white">Loading...</p>
+        </div>
+      )}
 
       {error && (
-        <p className="text-center my-7 text-2xl">Something went wrong.</p>
+        <div className="h-[calc(100vh-64px)] flex items-center justify-center">
+          <p className="text-center my-7 text-2xl bg-white">
+            Something went wrong!
+          </p>
+        </div>
       )}
 
       {listing && !loading && !error && (

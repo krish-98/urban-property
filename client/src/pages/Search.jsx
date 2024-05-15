@@ -4,7 +4,7 @@ import ListingItem from '../components/ListingItem'
 import { FaSearch } from 'react-icons/fa'
 
 export default function Search() {
-  const [sidebardata, setSidebardata] = useState({
+  const [searchData, setSearchData] = useState({
     searchTerm: '',
     type: 'all',
     parking: false,
@@ -16,6 +16,7 @@ export default function Search() {
   const [loading, setLoading] = useState(false)
   const [listings, setListings] = useState([])
   const [showMore, setShowMore] = useState(false)
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -37,7 +38,7 @@ export default function Search() {
       sortFromUrl ||
       orderFromUrl
     ) {
-      setSidebardata({
+      setSearchData({
         searchTerm: searchTermFromUrl || '',
         type: typeFromUrl || 'all',
         parking: parkingFromUrl === 'true' ? true : false,
@@ -68,16 +69,16 @@ export default function Search() {
   }, [location.search])
 
   const handleChange = (e) => {
+    if (e.target.id === 'searchTerm') {
+      setSearchData({ ...searchData, searchTerm: e.target.value })
+    }
+
     if (
       e.target.id === 'all' ||
       e.target.id === 'rent' ||
       e.target.id === 'sale'
     ) {
-      setSidebardata({ ...sidebardata, type: e.target.id })
-    }
-
-    if (e.target.id === 'searchTerm') {
-      setSidebardata({ ...sidebardata, searchTerm: e.target.value })
+      setSearchData({ ...searchData, type: e.target.id })
     }
 
     if (
@@ -85,8 +86,8 @@ export default function Search() {
       e.target.id === 'furnished' ||
       e.target.id === 'offer'
     ) {
-      setSidebardata({
-        ...sidebardata,
+      setSearchData({
+        ...searchData,
         [e.target.id]:
           e.target.checked || e.target.checked === 'true' ? true : false,
       })
@@ -96,7 +97,7 @@ export default function Search() {
       const sort = e.target.value.split('_')[0] || 'created_at'
       const order = e.target.value.split('_')[1] || 'desc'
 
-      setSidebardata({ ...sidebardata, sort, order })
+      setSearchData({ ...searchData, sort, order })
     }
   }
 
@@ -104,13 +105,14 @@ export default function Search() {
     e.preventDefault()
 
     const urlParams = new URLSearchParams()
-    urlParams.set('searchTerm', sidebardata.searchTerm)
-    urlParams.set('type', sidebardata.type)
-    urlParams.set('parking', sidebardata.parking)
-    urlParams.set('furnished', sidebardata.furnished)
-    urlParams.set('offer', sidebardata.offer)
-    urlParams.set('sort', sidebardata.sort)
-    urlParams.set('order', sidebardata.order)
+    urlParams.set('searchTerm', searchData.searchTerm)
+    urlParams.set('type', searchData.type)
+    urlParams.set('parking', searchData.parking)
+    urlParams.set('furnished', searchData.furnished)
+    urlParams.set('offer', searchData.offer)
+    urlParams.set('sort', searchData.sort)
+    urlParams.set('order', searchData.order)
+
     const searchQuery = urlParams.toString()
     navigate(`/search?${searchQuery}`)
   }
@@ -132,7 +134,7 @@ export default function Search() {
 
   return (
     <div className="bg-[#fffaf7]">
-      <div className="max-w-4xl mx-auto p-4">
+      <div className="max-w-6xl mx-auto p-4">
         <div>
           <h2 className="font-semibold text-xl my-4 lg:text-2xl">
             Find Property
@@ -142,16 +144,14 @@ export default function Search() {
             onSubmit={handleSubmit}
             className="flex flex-col gap-8 text-sm lg:text-base"
           >
+            {/* Search field */}
             <div className="flex items-center gap-2">
-              {/* <label className="whitespace-nowrap font-semibold">
-                Search Term:
-              </label> */}
               <input
                 type="text"
                 id="searchTerm"
                 placeholder="Search..."
                 className="border rounded-lg p-3 w-full"
-                value={sidebardata.searchTerm}
+                value={searchData.searchTerm}
                 onChange={handleChange}
               />
             </div>
@@ -166,7 +166,7 @@ export default function Search() {
                     type="checkbox"
                     id="all"
                     className="w-5 accent-[#fb923c]"
-                    checked={sidebardata.type === 'all'}
+                    checked={searchData.type === 'all'}
                     onChange={handleChange}
                   />
                   <span className="text-gray-700">Rent & Sale</span>
@@ -177,7 +177,7 @@ export default function Search() {
                     type="checkbox"
                     id="rent"
                     className="w-5 accent-[#fb923c]"
-                    checked={sidebardata.type === 'rent'}
+                    checked={searchData.type === 'rent'}
                     onChange={handleChange}
                   />
                   <span className="text-gray-700">Rent </span>
@@ -188,7 +188,7 @@ export default function Search() {
                     type="checkbox"
                     id="sale"
                     className="w-5 accent-[#fb923c]"
-                    checked={sidebardata.type === 'sale'}
+                    checked={searchData.type === 'sale'}
                     onChange={handleChange}
                   />
                   <span className="text-gray-700">Sale</span>
@@ -199,7 +199,7 @@ export default function Search() {
                     type="checkbox"
                     id="offer"
                     className="w-5 accent-[#fb923c]"
-                    checked={sidebardata.offer}
+                    checked={searchData.offer}
                     onChange={handleChange}
                   />
                   <span className="text-gray-700">Offer</span>
@@ -215,7 +215,7 @@ export default function Search() {
                     type="checkbox"
                     id="parking"
                     className="w-5 accent-[#fb923c]"
-                    checked={sidebardata.parking}
+                    checked={searchData.parking}
                     onChange={handleChange}
                   />
                   <span className="text-gray-700">Parking</span>
@@ -226,7 +226,7 @@ export default function Search() {
                     type="checkbox"
                     id="furnished"
                     className="w-5 accent-[#fb923c]"
-                    checked={sidebardata.furnished}
+                    checked={searchData.furnished}
                     onChange={handleChange}
                   />
                   <span className="text-gray-700">Furnished</span>
@@ -250,7 +250,7 @@ export default function Search() {
                 </select>
               </div>
 
-              <button className="flex items-center justify-center gap-1 bg-[#fb923c] font-semibold tracking-wider text-white p-3 rounded-lg hover:opacity-95">
+              <button className="flex items-center justify-center gap-1 bg-black font-semibold tracking-wider text-white p-3 rounded-lg hover:opacity-95">
                 <span>Search</span>
                 <FaSearch className="w-4 h-4" />
               </button>
@@ -258,13 +258,13 @@ export default function Search() {
           </form>
         </div>
 
-        <div className="">
-          <h1 className="text-xl font-semibold text-slate-700 my-5">
+        <div className="pt-4">
+          <h1 className="text-xl font-semibold text-slate-700 my-6">
             Listing results:
           </h1>
 
-          <div className="flex flex-wrap gap-4">
-            {!loading && listings.length === 0 && (
+          <div className="flex flex-wrap justify-center gap-8 lg:gap-12">
+            {!loading && listings?.length === 0 && (
               <p className="text-xl text-slate-700">No listing found!</p>
             )}
 
@@ -276,14 +276,14 @@ export default function Search() {
 
             {!loading &&
               listings &&
-              listings.map((listing) => (
-                <ListingItem key={listing._id} listing={listing} />
+              listings?.map((listing) => (
+                <ListingItem key={listing?._id} listing={listing} />
               ))}
           </div>
 
           {showMore && (
             <button
-              className="text-green-700 hover:underline p-7 text-center w-full"
+              className="text-[#fb923c] hover:underline p-7 text-center w-full"
               onClick={onShowMoreClick}
             >
               Show more

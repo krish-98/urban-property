@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { MdDelete, MdModeEdit } from 'react-icons/md'
-import { BsThreeDotsVertical } from 'react-icons/bs'
 import { ClockLoader } from 'react-spinners'
+import { GiNothingToSay } from 'react-icons/gi'
 
 const ListingCard = ({ listing, handleListingDelete }) => {
   return (
-    <div className="flex items-center justify-evenly py-4 mt-4 rounded shadow-md transition duration-300 hover:scale-105 ">
+    // <div className="flex items-center justify-evenly py-4 mt-4 rounded shadow-md transition duration-300 hover:scale-105 ">
+    <div className="grid grid-cols-4 justify-center items-center p-4 mt-4 rounded shadow-md transition duration-500 hover:scale-105">
       <Link
-        Link
         to={`/listing/${listing._id}`}
         className="flex items-center gap-2 hover:underline"
       >
@@ -96,14 +96,22 @@ export default function MyListing() {
   }
 
   return (
-    <div className="py-4 max-w-4xl mx-auto">
-      {userListings && userListings.length > 0 ? (
-        <>
+    <div className="py-4 max-w-5xl mx-auto">
+      {userListings && userListings?.length === 0 ? (
+        <div className="h-[calc(100vh-96px)] flex items-center justify-center gap-2 text-[#f9913c]">
+          <p className="text-xl font-semibold tracking-wider">
+            No Listings Available
+          </p>
+          <GiNothingToSay size={40} />
+        </div>
+      ) : (
+        <div className="px-4">
           <h3 className="text-xl md:text-3xl font-semibold text-center my-7 py-2">
             My Listing
           </h3>
 
-          <div className="flex items-center justify-around p-2">
+          {/* <div className="flex items-center justify-around"> */}
+          <div className="grid grid-cols-4 justify-center items-center">
             <p className="text-sm text-gray-400 font-medium tracking-wide">
               Name
             </p>
@@ -117,6 +125,7 @@ export default function MyListing() {
               Modify
             </p>
           </div>
+
           {userListings.map((listing) => (
             <ListingCard
               key={listing._id}
@@ -124,9 +133,7 @@ export default function MyListing() {
               handleListingDelete={handleListingDelete}
             />
           ))}
-        </>
-      ) : (
-        <p>No Listings Available</p>
+        </div>
       )}
     </div>
   )
