@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { MdDelete, MdModeEdit } from 'react-icons/md'
@@ -7,8 +7,7 @@ import { GiNothingToSay } from 'react-icons/gi'
 
 const ListingCard = ({ listing, handleListingDelete }) => {
   return (
-    // <div className="flex items-center justify-evenly py-4 mt-4 rounded shadow-md transition duration-300 hover:scale-105 ">
-    <div className="grid grid-cols-4 justify-center items-center p-4 mt-4 rounded shadow-md transition duration-500 hover:scale-105">
+    <div className="grid grid-cols-3 lg:grid-cols-4 justify-center items-center p-6 rounded-md shadow-lg transition duration-700 hover:scale-105">
       <Link
         to={`/listing/${listing._id}`}
         className="flex items-center gap-2 hover:underline"
@@ -18,14 +17,18 @@ const ListingCard = ({ listing, handleListingDelete }) => {
           alt={listing?.name}
           className="w-20 rounded-md"
         />
-        <p className="text-sm md:text-base">{listing?.name}</p>
+        <p className="text-sm text-center truncate md:text-base ">
+          {listing?.name}
+        </p>
       </Link>
 
-      <p className="text-sm md:text-base">{listing?.type}</p>
+      <p className="text-sm text-center md:text-base">{listing?.type}</p>
 
-      <p className="hidden lg:block">{listing?.createdAt}</p>
+      <p className="hidden lg:block text-center">
+        {new Date(listing?.createdAt)?.toLocaleDateString()}
+      </p>
 
-      <div className="flex items-center gap-4 p-2 rounded-md">
+      <div className="flex items-center justify-center gap-4 p-2 rounded-md">
         <Link to={`/update-listing/${listing._id}`}>
           <MdModeEdit
             className="w-5 h-5 fill-orange-500 cursor-pointer"
@@ -110,29 +113,30 @@ export default function MyListing() {
             My Listing
           </h3>
 
-          {/* <div className="flex items-center justify-around"> */}
-          <div className="grid grid-cols-4 justify-center items-center">
-            <p className="text-sm text-gray-400 font-medium tracking-wide">
+          <div className="grid grid-cols-3 lg:grid-cols-4 justify-center items-center">
+            <p className="text-sm text-center text-slate-400 font-medium tracking-wide">
               Name
             </p>
-            <p className="text-sm text-gray-400 font-medium tracking-wide">
+            <p className="text-sm text-center text-slate-400 font-medium tracking-wide">
               Type
             </p>
-            <p className="text-sm text-gray-400 font-medium tracking-wide hidden lg:block">
+            <p className="text-sm text-center text-slate-400 font-medium tracking-wide hidden lg:block">
               Created at
             </p>
-            <p className="text-sm text-gray-400 font-medium tracking-wide">
+            <p className="text-sm text-center text-slate-400 font-medium tracking-wide">
               Modify
             </p>
           </div>
 
-          {userListings.map((listing) => (
-            <ListingCard
-              key={listing._id}
-              listing={listing}
-              handleListingDelete={handleListingDelete}
-            />
-          ))}
+          <div className="space-y-8 mt-4">
+            {userListings.map((listing) => (
+              <ListingCard
+                key={listing._id}
+                listing={listing}
+                handleListingDelete={handleListingDelete}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>

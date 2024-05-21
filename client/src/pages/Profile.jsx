@@ -17,9 +17,10 @@ import {
   signOutUserStart,
   signOutUserSuccess,
   signOutUserFailure,
-} from '../../features/user/userSlice'
+} from '../features/user/userSlice'
 import { IoCameraReverse } from 'react-icons/io5'
 import { RiDeleteBin2Fill } from 'react-icons/ri'
+import { ClipLoader } from 'react-spinners'
 
 export default function Profile() {
   const fileRef = useRef(null)
@@ -39,6 +40,13 @@ export default function Profile() {
       handleFileUpload(file)
     }
   }, [file])
+
+  const handleChange = (e) => {
+    setFormData((currentFormData) => ({
+      ...currentFormData,
+      [e.target.id]: e.target.value,
+    }))
+  }
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app)
@@ -63,11 +71,7 @@ export default function Profile() {
     )
   }
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value })
-  }
-
-  const handleSubmit = async (e) => {
+  const handleSubmitChanges = async (e) => {
     e.preventDefault()
 
     try {
@@ -92,7 +96,7 @@ export default function Profile() {
     }
   }
 
-  const handleDelete = async () => {
+  const handleDeleteAccount = async () => {
     alert('Are you want to delete your account?')
 
     try {
@@ -114,7 +118,8 @@ export default function Profile() {
 
   return (
     <div className="p-3 max-w-lg mx-auto pt-28">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmitChanges} className="flex flex-col gap-4">
+        {/* User profile and upload btn */}
         <div
           className="self-center relative cursor-pointer"
           onClick={() => fileRef.current.click()}
@@ -199,19 +204,27 @@ export default function Profile() {
 
         <button
           disabled={loading}
-          className="bg-[#191919] text-sm md:text-base text-white font-medium tracking-wider rounded-lg p-3 my-2 hover:opacity-90 disabled:opacity-70 hover:bg-[#fb923c]"
+          className="bg-[#191919] text-sm md:text-base text-white font-medium tracking-wider rounded-lg p-3 my-2 hover:opacity-90 disabled:bg-gray-600 disabled:cursor-not-allowed hover:bg-gray-800"
         >
-          {loading ? 'Saving...' : 'Save Changes'}
+          {loading ? (
+            <div className="flex items-center justify-center gap-1">
+              <ClipLoader color="#fff" size={15} />
+              <span>Saving...</span>
+            </div>
+          ) : (
+            'Save Changes'
+          )}
         </button>
       </form>
+
+      {/* Delete user button */}
       <button
-        onClick={handleDelete}
-        className="flex justify-center items-center mt-5 bg-red-600 w-full p-3 rounded-md gap-1 hover:bg-red-500"
+        onClick={handleDeleteAccount}
+        disabled={loading}
+        className="flex justify-center items-center mt-5 bg-red-600 w-full p-3 rounded-md gap-1 hover:bg-red-500 disabled:cursor-not-allowed"
       >
         <RiDeleteBin2Fill className="fill-white w-5 h-5" />
-        <span className="text-white cursor-pointer font-medium">
-          Delete account
-        </span>
+        <span className="text-white font-medium">Delete account</span>
       </button>
     </div>
   )

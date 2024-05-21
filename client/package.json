@@ -19,6 +19,7 @@
     "react-router-dom": "^6.21.1",
     "react-spinners": "^0.13.8",
     "redux-persist": "^6.0.0",
+    "sonner": "^1.4.41",
     "swiper": "^11.0.5",
     "urban-property": "file:.."
   },

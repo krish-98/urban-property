@@ -5,18 +5,22 @@ import {
   signInFailure,
   signInStart,
   signInSuccess,
-} from '../../features/user/userSlice'
+} from '../features/user/userSlice'
 import OAuth from '../components/OAuth'
+import { toast } from 'sonner'
 
 export default function SignIn() {
   const [formData, setFormData] = useState({})
   const navigate = useNavigate()
-  const dispatch = useDispatch()
 
+  const dispatch = useDispatch()
   const { loading, error } = useSelector((store) => store.user)
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value })
+    setFormData((currentFormData) => ({
+      ...currentFormData,
+      [e.target.id]: e.target.value,
+    }))
   }
 
   const handleSubmit = async (e) => {
@@ -36,6 +40,9 @@ export default function SignIn() {
       }
       dispatch(signInSuccess(data))
       navigate('/')
+      toast.success(`Welcome,`, {
+        position: 'top-right',
+      })
     } catch (error) {
       dispatch(signInFailure(error.message))
     }
@@ -77,10 +84,11 @@ export default function SignIn() {
             <button
               disabled={loading}
               type="submit"
-              className="bg-black text-sm md:text-base text-white p-3 rounded-lg uppercase hover:opacity-90 disabled:opacity-70"
+              className="bg-black text-sm md:text-base text-white p-3 rounded-lg uppercase hover:bg-slate-800 disabled:opacity-70"
             >
               {loading ? 'Loading...' : 'Sign In'}
             </button>
+
             <OAuth />
           </form>
 

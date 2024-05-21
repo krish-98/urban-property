@@ -6,7 +6,7 @@ import {
   signOutUserFailure,
   signOutUserStart,
   signOutUserSuccess,
-} from '../../features/user/userSlice'
+} from '../features/user/userSlice'
 
 export default function Header() {
   const [searchTerm, setSearchTerm] = useState('')

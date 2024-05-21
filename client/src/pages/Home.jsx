@@ -13,8 +13,3 @@ export default function Home() {
     </>
   )
 }
-
-// import { Swiper, SwiperSlide } from 'swiper/react'
-// import { Navigation } from 'swiper/modules'
-// import SwiperCore from 'swiper'
-// import 'swiper/css/bundle'

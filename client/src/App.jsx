@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import Header from './components/Header'
 import PrivateRoute from './components/PrivateRoute'
 import Home from './pages/Home'
@@ -11,7 +12,6 @@ import UpdateListing from './pages/UpdateListing'
 import Listing from './pages/Listing'
 import Search from './pages/Search'
 import MyListing from './pages/MyListing'
-import { useSelector } from 'react-redux'
 
 export default function App() {
   const { currentUser } = useSelector((state) => state.user)

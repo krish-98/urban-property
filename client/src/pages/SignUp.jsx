@@ -9,9 +9,10 @@ export default function SignUp() {
   const navigate = useNavigate()
 
   const handleChange = (e) => {
-    setFormData((prevFormData) => {
-      return { ...prevFormData, [e.target.id]: e.target.value }
-    })
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [e.target.id]: e.target.value,
+    }))
   }
 
   const handleSubmit = async (e) => {
@@ -49,6 +50,7 @@ export default function SignUp() {
           <h1 className="text-lg md:text-3xl text-center font-semibold my-4">
             Sign Up
           </h1>
+
           {error ? (
             <p className="text-sm md:text-base text-red-600 font-medium text-center py-2 md:py-4">
               {error}
@@ -85,10 +87,11 @@ export default function SignUp() {
             <button
               disabled={isLoading}
               type="submit"
-              className="bg-black text-sm md:text-base text-white p-3 rounded-lg uppercase hover:opacity-90 disabled:opacity-70"
+              className="bg-black text-sm md:text-base text-white p-3 rounded-lg uppercase hover:bg-slate-800 disabled:opacity-70"
             >
               {isLoading ? 'Loading...' : 'Sign Up'}
             </button>
+
             <OAuth />
           </form>
 

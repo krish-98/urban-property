@@ -58,7 +58,7 @@ export default function FeaturedProperty() {
         <h3 className="text-2xl font-bold">Feaured Properties</h3>
 
         {loading ? (
-          <CircleLoader size={50} color="#fb923c" className="" />
+          <CircleLoader size={50} color="#fb923c" />
         ) : (
           <>
             {offerListings && offerListings.length > 0 && (
