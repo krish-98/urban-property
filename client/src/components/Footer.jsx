@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 export default function Footer() {
   return (
-    <footer className="bg-[#fff7f2]">
+    <footer className="bg-mainColor">
       <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center py-20 gap-10 px-10">
         <div className="space-y-1 w-[300px] h-[200px]">
           <Link to="/">

@@ -1,3 +1,4 @@
+import { lazy } from 'react'
 import {
   BrowserRouter as Router,
   Routes,
@@ -7,19 +8,20 @@ import {
 import { useSelector } from 'react-redux'
 
 import Header from './components/Header'
-import PrivateRoute from './components/PrivateRoute'
-
 import Home from './pages/Home'
-import SignIn from './pages/SignIn'
-import SignUp from './pages/SignUp'
-import About from './pages/About'
+import SuspenseWrapper from './components/SuspenseWrapper'
 import Profile from './pages/Profile'
 import CreateListing from './pages/CreateListing'
 import UpdateListing from './pages/UpdateListing'
-import Listing from './pages/Listing'
-import Search from './pages/Search'
 import MyListing from './pages/MyListing'
-import NotFound from './pages/NotFound'
+
+const PrivateRoute = lazy(() => import('./components/PrivateRoute'))
+const SignIn = lazy(() => import('./pages/SignIn'))
+const SignUp = lazy(() => import('./pages/SignUp'))
+const About = lazy(() => import('./pages/About'))
+const Search = lazy(() => import('./pages/Search'))
+const Listing = lazy(() => import('./pages/Listing'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 
 export default function App() {
   const { currentUser } = useSelector((state) => state.user)
@@ -31,16 +33,37 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route
           path="/sign-in"
-          element={!currentUser?._id ? <SignIn /> : <Navigate to="/" />}
+          element={
+            !currentUser?._id ? (
+              <SuspenseWrapper component={<SignIn />} />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
         />
         <Route
           path="/sign-up"
-          element={!currentUser?._id ? <SignUp /> : <Navigate to="/" />}
+          element={
+            !currentUser?._id ? (
+              <SuspenseWrapper component={<SignUp />} />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
         />
-        <Route path="/about" element={<About />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/listing/:listingId" element={<Listing />} />
-        <Route element={<PrivateRoute />}>
+        <Route
+          path="/about"
+          element={<SuspenseWrapper component={<About />} />}
+        />
+        <Route
+          path="/search"
+          element={<SuspenseWrapper component={<Search />} />}
+        />
+        <Route
+          path="/listing/:listingId"
+          element={<SuspenseWrapper component={<Listing />} />}
+        />
+        <Route element={<SuspenseWrapper component={<PrivateRoute />} />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/create-listing" element={<CreateListing />} />
           <Route path="/my-listing" element={<MyListing />} />
@@ -49,7 +72,10 @@ export default function App() {
             element={<UpdateListing />}
           />
         </Route>
-        <Route path="*" element={<NotFound />} />
+        <Route
+          path="*"
+          element={<SuspenseWrapper component={<NotFound />} />}
+        />
       </Routes>
     </Router>
   )

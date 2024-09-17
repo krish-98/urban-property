@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 export default function About() {
   return (
     <div>
-      <div className="bg-[#fff7f2]">
+      <div className="bg-mainColor">
         <div className="py-20 px-4 lg:px-0 max-w-5xl mx-auto">
           <h1 className="text-3xl font-bold mb-6 text-slate-800">
             About Urban Property
@@ -87,7 +87,7 @@ export default function About() {
         </div>
       </section>
 
-      <footer className="bg-[#fff7f2]">
+      <footer className="bg-mainColor">
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center py-20 gap-10 px-10">
           <div className="space-y-1 w-[300px] h-[200px]">
             <Link to="/">

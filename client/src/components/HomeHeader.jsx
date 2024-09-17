@@ -2,8 +2,8 @@ import House from '../assets/house.png'
 
 export default function HomeHeader() {
   return (
-    <header className="bg-[#fff7f2]">
-      <div className="max-w-6xl mx-auto bg-[#fff7f2] py-16 flex flex-col md:flex-row gap-8 items-center lg:py-32">
+    <header className="bg-mainColor">
+      <div className="max-w-6xl mx-auto bg-mainColor py-16 flex flex-col md:flex-row gap-8 items-center lg:py-32">
         <div className="px-8 space-y-4">
           <h1 className="text-2xl font-bold lg:text-[2.5rem] leading-tight">
             <span>Find a perfect property</span>

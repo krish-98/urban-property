@@ -44,7 +44,7 @@ export default function SignUp() {
   }
 
   return (
-    <div className="bg-[#fff7f2]">
+    <div className="bg-mainColor">
       <div className="flex h-[calc(100vh-60px)] md:h-[calc(100vh-72px)] justify-center items-center">
         <div className="px-6 bg-white w-80 md:w-96 h-[475px] rounded-xl drop-shadow-xl">
           <h1 className="text-lg md:text-3xl text-center font-semibold my-4">

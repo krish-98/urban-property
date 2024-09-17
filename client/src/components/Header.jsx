@@ -66,7 +66,7 @@ export default function Header() {
         {/* Search bar */}
         <form
           onSubmit={handleSubmit}
-          className="ring-[#fff7f2] ring-2 p-1.5 md:p-3 rounded-lg flex items-center gap-1.5"
+          className="ring-mainColor ring-2 p-1.5 md:p-3 rounded-lg flex items-center gap-1.5"
         >
           <input
             type="text"
