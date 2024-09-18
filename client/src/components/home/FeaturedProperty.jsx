@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import ListingItem from '../components/ListingItem'
 import { CircleLoader } from 'react-spinners'
+import ListingItem from '../ListingItem'
 
 export default function FeaturedProperty() {
   const [loading, setLoading] = useState(false)
@@ -14,6 +14,9 @@ export default function FeaturedProperty() {
       try {
         setLoading(true)
         const res = await fetch('/api/listing/get?offer=true&limit=3')
+
+        if (!res.ok) throw new Error('Network error occured!')
+
         const data = await res.json()
         setOfferListings(data)
 
@@ -27,6 +30,9 @@ export default function FeaturedProperty() {
     const fetchRentListings = async () => {
       try {
         const res = await fetch('/api/listing/get?type=rent&limit=3')
+
+        if (!res.ok) throw new Error('Network error occured!')
+
         const data = await res.json()
         setRentListings(data)
 
@@ -40,6 +46,9 @@ export default function FeaturedProperty() {
     const fetchSaleListings = async () => {
       try {
         const res = await fetch('/api/listing/get?type=sale&limit=3')
+
+        if (!res.ok) throw new Error('Network error occured!')
+
         const data = await res.json()
         setSaleListings(data)
         setLoading(false)

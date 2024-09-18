@@ -15,7 +15,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <Toaster />
+        <Toaster position="top-center" richColors />
         <ErrorBoundary fallback={<ErrorBoundaryLoader />}>
           <App />
         </ErrorBoundary>

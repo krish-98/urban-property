@@ -1,7 +1,7 @@
-import HomeHeader from '../components/HomeHeader'
-import FeaturedProperty from '../components/FeaturedProperty'
-import Achievements from '../components/Achievements'
-import Footer from '../components/Footer'
+import HomeHeader from '../components/home/HomeHeader'
+import FeaturedProperty from '../components/home/FeaturedProperty'
+import Achievements from '../components/home/Achievements'
+import Footer from '../components/home/Footer'
 
 export default function Home() {
   return (

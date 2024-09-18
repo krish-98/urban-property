@@ -1,17 +1,22 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import OAuth from '../components/OAuth'
 
 export default function SignUp() {
-  const [formData, setFormData] = useState({})
-  const [error, setError] = useState(null)
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+  })
   const [isLoading, setIsLoading] = useState(false)
+
   const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [e.target.id]: e.target.value,
+      [e.target.name]: e.target.value,
     }))
   }
 
@@ -20,26 +25,23 @@ export default function SignUp() {
 
     try {
       setIsLoading(true)
-      const response = await fetch('/api/auth/signup', {
+      const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
-      const data = await response.json()
 
+      const data = await res.json()
       if (data.success === false) {
         setIsLoading(false)
-        setError('Email Id already exist')
-        setTimeout(() => setError(null), 5000)
+        toast.error('Email Id already exist')
         return
       }
-      setIsLoading(false)
-      setError(null)
       navigate('/sign-in')
-      console.log(data)
     } catch (error) {
+      toast.error(error)
+    } finally {
       setIsLoading(false)
-      setError(`Something went wrong, Try again after sometime`)
     }
   }
 
@@ -51,48 +53,46 @@ export default function SignUp() {
             Sign Up
           </h1>
 
-          {error ? (
-            <p className="text-sm md:text-base text-red-600 font-medium text-center py-2 md:py-4">
-              {error}
-            </p>
-          ) : (
-            ''
-          )}
-
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <input
               type="text"
               placeholder="username"
-              id="username"
-              required
+              name="username"
               className="border p-3 pl-4 rounded-lg"
+              value={formData.username}
               onChange={handleChange}
+              required
+              minLength="3"
             />
             <input
               type="email"
               placeholder="username@email.com"
-              id="email"
-              required
+              name="email"
               className="border p-3 pl-4 rounded-lg"
+              value={formData.email}
               onChange={handleChange}
+              required
             />
             <input
               type="password"
               placeholder="********"
-              id="password"
-              required
+              name="password"
               className="border p-3 pl-4 rounded-lg"
+              value={formData.password}
               onChange={handleChange}
+              required
+              minLength="8"
+              maxLength="20"
             />
             <button
               disabled={isLoading}
               type="submit"
-              className="bg-black text-sm md:text-base text-white p-3 rounded-lg uppercase hover:bg-slate-800 disabled:opacity-70"
+              className="bg-black text-sm md:text-base text-white p-3 rounded-lg uppercase hover:bg-slate-800 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isLoading ? 'Loading...' : 'Sign Up'}
             </button>
 
-            <OAuth />
+            <OAuth title={'Sign Up with Google'} />
           </form>
 
           <div className="flex gap-2 mt-5 text-sm md:text-base">

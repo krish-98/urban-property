@@ -17,7 +17,7 @@ import {
   signOutUserStart,
   signOutUserSuccess,
   signOutUserFailure,
-} from '../features/user/userSlice'
+} from '../app/features/user/userSlice'
 import { IoCameraReverse } from 'react-icons/io5'
 import { RiDeleteBin2Fill } from 'react-icons/ri'
 import { ClipLoader } from 'react-spinners'

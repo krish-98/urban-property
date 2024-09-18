@@ -1,4 +1,5 @@
-import House from '../assets/house.png'
+import { Link } from 'react-router-dom'
+import House from '../../assets/house.png'
 
 export default function HomeHeader() {
   return (
@@ -16,9 +17,12 @@ export default function HomeHeader() {
           </p>
           <div className="my-8 space-y-4 text-slate-600">
             <p> What you looking for is one search away</p>
-            <button className="bg-black text-white p-4 rounded-lg ">
+            <Link
+              to={'/search'}
+              className="bg-black text-white p-4 rounded-lg inline-block"
+            >
               Find your search
-            </button>
+            </Link>
           </div>
         </div>
 

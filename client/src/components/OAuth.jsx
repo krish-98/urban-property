@@ -1,15 +1,14 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
+import { signInSuccess } from '../app/features/user/userSlice.js'
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth'
-import { app } from '../firebase.js'
-import { signInSuccess } from '../features/user/userSlice.js'
-import { ClipLoader } from 'react-spinners'
 import { toast } from 'sonner'
+import { ClipLoader } from 'react-spinners'
+import { app } from '../firebase.js'
 
-export default function OAuth() {
+export default function OAuth({ title }) {
   const [loading, setLoading] = useState(false)
-
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -32,33 +31,26 @@ export default function OAuth() {
       })
       const data = await res.json()
 
-      setLoading(false)
       dispatch(signInSuccess(data))
       navigate('/')
+      toast.success(`Welcome, ${data.username}`, { position: 'top-right' })
     } catch (error) {
+      toast.warning(`${error.message}`)
+      console.error('Could not sign in with google', error)
+    } finally {
       setLoading(false)
-      toast.warning(`Could not sign in with google ${error.message}`, {
-        position: 'top-center',
-        style: {
-          backgroundColor: 'red',
-          color: 'white',
-        },
-      })
-      console.log('Could not sign in with google', error)
     }
   }
 
   return (
-    <>
-      <button
-        onClick={handleGoogleClick}
-        type="button"
-        disabled={loading}
-        className="bg-red-600 flex items-center justify-center gap-1 text-sm md:text-base text-white p-3 rounded-lg hover:bg-red-500 disabled:cursor-not-allowed"
-      >
-        {loading && <ClipLoader color="#fff" size={15} />}
-        <span>Continue with Google</span>
-      </button>
-    </>
+    <button
+      onClick={handleGoogleClick}
+      type="button"
+      disabled={loading}
+      className="bg-red-600 flex items-center justify-center gap-1.5 text-sm md:text-base text-white p-3 rounded-lg hover:bg-red-500 disabled:cursor-not-allowed disabled:bg-red-400"
+    >
+      {loading && <ClipLoader color="#fff" size={14} />}
+      <span>{title}</span>
+    </button>
   )
 }

@@ -5,21 +5,23 @@ import {
   signInFailure,
   signInStart,
   signInSuccess,
-} from '../features/user/userSlice'
+} from '../app/features/user/userSlice'
 import OAuth from '../components/OAuth'
 import { toast } from 'sonner'
 
 export default function SignIn() {
-  const [formData, setFormData] = useState({})
-  const navigate = useNavigate()
-
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  })
   const dispatch = useDispatch()
   const { loading, error } = useSelector((store) => store.user)
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData((currentFormData) => ({
       ...currentFormData,
-      [e.target.id]: e.target.value,
+      [e.target.name]: e.target.value,
     }))
   }
 
@@ -36,15 +38,18 @@ export default function SignIn() {
 
       if (data.success === false) {
         dispatch(signInFailure(data.message))
+        toast.error(error)
         return
       }
+
       dispatch(signInSuccess(data))
       navigate('/')
-      toast.success(`Welcome,`, {
+      toast.success(`Welcome, ${data?.username}`, {
         position: 'top-right',
       })
     } catch (error) {
       dispatch(signInFailure(error.message))
+      toast.error(error)
     }
   }
 
@@ -56,40 +61,34 @@ export default function SignIn() {
             Sign In
           </h1>
 
-          {error ? (
-            <p className="text-sm md:text-base text-red-600 font-medium text-center py-2 md:py-4">
-              {error}
-            </p>
-          ) : (
-            ''
-          )}
-
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <input
               type="email"
               placeholder="username@email.com"
-              id="email"
-              required
               className="border p-3 pl-4 rounded-lg"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
+              required
             />
             <input
               type="password"
               placeholder="********"
-              id="password"
-              required
               className="border p-3 pl-4 rounded-lg"
+              name="password"
+              value={formData.password}
               onChange={handleChange}
+              required
             />
             <button
               disabled={loading}
               type="submit"
-              className="bg-black text-sm md:text-base text-white p-3 rounded-lg uppercase hover:bg-slate-800 disabled:opacity-70"
+              className="bg-black text-sm md:text-base text-white p-3 rounded-lg uppercase hover:bg-slate-800 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {loading ? 'Loading...' : 'Sign In'}
             </button>
 
-            <OAuth />
+            <OAuth title={'Sign In with Google'} />
           </form>
 
           <div className="flex gap-2 mt-5 text-sm md:text-base">
