@@ -1,11 +1,11 @@
-import { lazy } from 'react'
+import { lazy, useEffect } from 'react'
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Header from './components/Header'
 import Home from './pages/Home'
@@ -14,6 +14,8 @@ import Profile from './pages/Profile'
 import CreateListing from './pages/CreateListing'
 import UpdateListing from './pages/UpdateListing'
 import MyListing from './pages/MyListing'
+import { getCookie } from './utils/getCookie'
+import { signOutUserSuccess } from './app/features/user/userSlice'
 
 const PrivateRoute = lazy(() => import('./components/PrivateRoute'))
 const SignIn = lazy(() => import('./pages/SignIn'))
@@ -24,7 +26,14 @@ const Listing = lazy(() => import('./pages/Listing'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 export default function App() {
+  const dispatch = useDispatch()
   const { currentUser } = useSelector((state) => state.user)
+
+  useEffect(() => {
+    if (!getCookie()) {
+      dispatch(signOutUserSuccess())
+    }
+  }, [])
 
   return (
     <Router>

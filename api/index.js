@@ -3,12 +3,12 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import path from 'path'
+
 import authRouter from './routes/authRoutes.js'
 import userRouter from './routes/userRoutes.js'
 import listingRouter from './routes/listingRoutes.js'
 
 dotenv.config()
-
 const __dirname = path.resolve()
 
 const app = express()
