@@ -3,10 +3,6 @@ import User from '../models/User.js'
 import { errorHandler } from '../utils/error.js'
 import Listing from '../models/Listing.js'
 
-export const test = (req, res) => {
-  res.json({ message: 'API route is working!' })
-}
-
 export const updateUser = async (req, res, next) => {
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, 'You can only update your own account!'))

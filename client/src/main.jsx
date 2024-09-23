@@ -12,14 +12,12 @@ import ErrorBoundary from './components/ErrorBoundary.jsx'
 import ErrorBoundaryLoader from './components/fallback-ui/ErrorBoundaryLoader.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <Toaster position="top-center" richColors />
-        <ErrorBoundary fallback={<ErrorBoundaryLoader />}>
-          <App />
-        </ErrorBoundary>
-      </PersistGate>
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <Toaster position="top-center" richColors />
+      <ErrorBoundary fallback={<ErrorBoundaryLoader />}>
+        <App />
+      </ErrorBoundary>
+    </PersistGate>
+  </Provider>
 )

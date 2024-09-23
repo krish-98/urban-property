@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
 import {
   getDownloadURL,
   getStorage,
@@ -14,13 +13,11 @@ import {
   updateUserFailure,
   deleteUserFailure,
   deleteUserSuccess,
-  signOutUserStart,
-  signOutUserSuccess,
-  signOutUserFailure,
 } from '../app/features/user/userSlice'
 import { IoCameraReverse } from 'react-icons/io5'
 import { RiDeleteBin2Fill } from 'react-icons/ri'
 import { ClipLoader } from 'react-spinners'
+import { toast } from 'sonner'
 
 export default function Profile() {
   const fileRef = useRef(null)
@@ -28,9 +25,6 @@ export default function Profile() {
   const [filePercentage, setFilePercentage] = useState(0)
   const [fileUploadError, setFileUploadError] = useState(false)
   const [formData, setFormData] = useState({})
-  const [updateSuccess, setUpdateSuccess] = useState(false)
-  const [showListingsError, setShowListingsError] = useState(false)
-  const [userListings, setUserListings] = useState(false)
 
   const dispatch = useDispatch()
   const { currentUser, loading, error } = useSelector((store) => store.user)
@@ -90,7 +84,9 @@ export default function Profile() {
       }
 
       dispatch(updateUserSuccess(data))
-      setUpdateSuccess(true)
+      toast.success('Account updated successfully!', {
+        position: 'bottom-left',
+      })
     } catch (error) {
       dispatch(updateUserFailure(error.message))
     }
