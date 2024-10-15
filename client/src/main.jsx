@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { Toaster } from 'sonner'
+import { AnimatePresence } from 'framer-motion'
 
 import { persistor, store } from './app/store.js'
 import { Provider } from 'react-redux'
@@ -16,7 +17,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <PersistGate loading={null} persistor={persistor}>
       <Toaster position="top-center" richColors />
       <ErrorBoundary fallback={<ErrorBoundaryLoader />}>
-        <App />
+        <AnimatePresence>
+          <App />
+        </AnimatePresence>
       </ErrorBoundary>
     </PersistGate>
   </Provider>

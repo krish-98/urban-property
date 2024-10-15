@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import House from '../../assets/house.png'
 
 export default function HomeHeader() {
@@ -17,12 +18,17 @@ export default function HomeHeader() {
           </p>
           <div className="my-8 space-y-4 text-slate-600">
             <p> What you looking for is one search away</p>
-            <Link
-              to={'/search'}
-              className="bg-black text-white p-4 rounded-lg inline-block"
+            <motion.div
+              whileHover={{ scaleY: 1.05 }}
+              whileTap={{ scaleY: 0.97 }}
             >
-              Find your search
-            </Link>
+              <Link
+                to={'/search'}
+                className="bg-black text-white p-4 rounded-lg inline-block hover:bg-slate-900"
+              >
+                Find your search
+              </Link>
+            </motion.div>
           </div>
         </div>
 

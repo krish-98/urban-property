@@ -7,6 +7,7 @@ import {
   signOutUserStart,
   signOutUserSuccess,
 } from '../app/features/user/userSlice'
+import { motion } from 'framer-motion'
 
 export default function Header() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -80,7 +81,7 @@ export default function Header() {
           </button>
         </form>
 
-        <ul className="flex gap-4 items-center">
+        <ul className="flex items-center gap-4">
           <Link to="/" className="hidden sm:inline">
             <li className="font-medium hover:text-slate-600">Home</li>
           </Link>
@@ -104,11 +105,13 @@ export default function Header() {
               referrerPolicy="no-referrer"
             />
           ) : (
-            <Link to="/sign-in">
-              <li className="bg-[#1a1a1a] text-white px-3 py-1.5 rounded-lg transition-all hover:bg-opacity-80">
-                Sign In
-              </li>
-            </Link>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.85 }}>
+              <Link to="/sign-in">
+                <li className="bg-[#1a1a1a] text-white px-3 py-1.5 rounded-lg transition-all duration-500">
+                  Sign In
+                </li>
+              </Link>
+            </motion.div>
           )}
         </ul>
 

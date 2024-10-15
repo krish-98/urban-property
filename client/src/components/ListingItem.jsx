@@ -6,12 +6,12 @@ export default function ListingItem({ listing }) {
   return (
     <Link
       to={`/listing/${listing._id}`}
-      className="group bg-white shadow-md  overflow-hidden rounded-lg w-full sm:w-[330px] transition-all duration-500 hover:shadow-lg hover:shadow-slate-400"
+      className="group bg-white shadow-md overflow-hidden rounded-lg w-[330px] transition-all duration-500 hover:shadow-lg hover:shadow-slate-400"
     >
       <img
         src={listing.imageUrls[0]}
         alt="listing cover"
-        className="h-[320px] sm:h-[220px] w-full object-cover group-hover:scale-105 transistion-scale duration-300"
+        className="h-[320px] sm:h-[220px] w-full object-cover group-hover:scale-105 transition-all duration-300"
       />
 
       <div className="p-5 flex flex-col justify-between gap-2">
@@ -50,7 +50,7 @@ export default function ListingItem({ listing }) {
         <div className="flex items-center justify-between my-5 gap-2 font-semibold">
           <Link
             to={`/listing/${listing._id}`}
-            className=" bg-black text-white py-3 px-4 rounded-lg transition duration-500 hover:shadow-xl"
+            className=" bg-black text-white py-2.5 px-4 rounded-lg transition duration-500 hover:text-black hover:bg-white hover:ring-black hover:border-2"
           >
             View Details
           </Link>
@@ -67,3 +67,4 @@ export default function ListingItem({ listing }) {
     </Link>
   )
 }
+z

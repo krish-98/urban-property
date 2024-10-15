@@ -83,7 +83,7 @@ export default function FeaturedProperty() {
                     Show more
                   </Link>
                 </div>
-                <div className="flex flex-wrap gap-6 xl:justify-between">
+                <div className="flex flex-wrap justify-center gap-6 xl:justify-between">
                   {offerListings.map((listing) => (
                     <ListingItem listing={listing} key={listing._id} />
                   ))}
@@ -104,7 +104,7 @@ export default function FeaturedProperty() {
                     Show more
                   </Link>
                 </div>
-                <div className="flex flex-wrap gap-6 xl:justify-between">
+                <div className="flex flex-wrap justify-center gap-6 xl:justify-between">
                   {rentListings.map((listing) => (
                     <ListingItem listing={listing} key={listing._id} />
                   ))}
@@ -125,7 +125,7 @@ export default function FeaturedProperty() {
                     Show more
                   </Link>
                 </div>
-                <div className="flex flex-wrap gap-6 xl:justify-between">
+                <div className="flex flex-wrap justify-center gap-6 xl:justify-between">
                   {saleListings.map((listing) => (
                     <ListingItem listing={listing} key={listing._id} />
                   ))}
