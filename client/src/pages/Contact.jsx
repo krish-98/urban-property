@@ -1,9 +1,13 @@
+import { current } from '@reduxjs/toolkit'
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 export default function Contact({ listing }) {
   const [landlord, setLandlord] = useState(null)
   const [message, setMessage] = useState('')
+
+  const { currentUser } = useSelector((state) => state.user)
 
   useEffect(() => {
     const fetchLandlord = async () => {
@@ -17,7 +21,7 @@ export default function Contact({ listing }) {
     }
 
     fetchLandlord()
-  }, [listing?.userRef])
+  }, [listing.userRef])
 
   const handleOnChange = (e) => {
     setMessage(e.target.value)
@@ -26,17 +30,15 @@ export default function Contact({ listing }) {
   return (
     <>
       {landlord && (
-        <div className="px-3 py-5 md:py-7 md:px-6 border rounded-md shadow-sm space-y-4">
+        <div className="px-3 py-5 md:py-7 md:px-6 border rounded-xl shadow-md shadow-ubOrange space-y-4 w-[350px] md:w-[400px]">
           <h4 className="text-xl font-semibold">Owner Information</h4>
-
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-4 md:gap-4">
             <img
               src={landlord?.avatar}
               alt={landlord?.username}
               referrerPolicy="no-referrer"
-              className="rounded-lg"
+              className="rounded-lg w-24"
             />
-
             <div className="flex flex-col gap-2">
               <h6 className="capitalize text-sm tracking-wide font-semibold md:text-base">
                 {landlord?.username}
@@ -44,12 +46,21 @@ export default function Contact({ listing }) {
               <p className="text-sm text-gray-500 md:text-base">
                 {landlord?.email}
               </p>
-              <Link
-                to={`mailto:${landlord?.email}?subject=Regarding this property&body=I'm contacting you regarding ${listing?.name} property information`}
-                className="bg-[#fb923c] tracking-wider text-white text-center font-semibold uppercase px-4 py-2 rounded-xl hover:scale-105 hover:opacity-90 transition duration-300"
-              >
-                Contact
-              </Link>
+              {!currentUser ? (
+                <Link
+                  to={'/sign-in'}
+                  className="bg-ubOrange text-white text-center font-semibold px-4 py-2 rounded-xl hover:scale-105 hover:bg-black transition-all duration-300"
+                >
+                  Sign In to contact
+                </Link>
+              ) : (
+                <Link
+                  to={`mailto:${landlord?.email}?subject=Regarding this property&body=I'm contacting you regarding ${listing?.name} property information`}
+                  className="bg-ubOrange text-white text-center font-semibold uppercase px-4 py-2 rounded-xl hover:scale-105 hover:bg-black transition-all duration-300"
+                >
+                  Contact
+                </Link>
+              )}
             </div>
           </div>
         </div>

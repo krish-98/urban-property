@@ -5,6 +5,7 @@ export default {
     extend: {
       colors: {
         mainColor: '#fff7f2',
+        ubOrange: '#fb923c',
       },
     },
   },
