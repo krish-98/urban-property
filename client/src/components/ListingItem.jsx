@@ -67,4 +67,3 @@ export default function ListingItem({ listing }) {
     </Link>
   )
 }
-z
