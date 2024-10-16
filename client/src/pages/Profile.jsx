@@ -6,7 +6,7 @@ import {
   ref,
   uploadBytesResumable,
 } from 'firebase/storage'
-import { app } from '../firebase'
+import { app } from '../utils/firebase'
 import {
   updateUserStart,
   updateUserSuccess,
@@ -85,7 +85,7 @@ export default function Profile() {
 
       dispatch(updateUserSuccess(data))
       toast.success('Account updated successfully!', {
-        position: 'bottom-left',
+        position: 'bottom-right',
       })
     } catch (error) {
       dispatch(updateUserFailure(error.message))

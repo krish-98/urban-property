@@ -5,7 +5,7 @@ import {
   ref,
   uploadBytesResumable,
 } from 'firebase/storage'
-import { app } from '../firebase'
+import { app } from '../utils/firebase'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { ClipLoader } from 'react-spinners'
@@ -27,39 +27,38 @@ export default function CreateListing() {
     furnished: false,
   })
   const [imageUploadError, setImageUploadError] = useState(false)
-  const [uploading, setUploading] = useState(false)
-  const [error, setError] = useState(false)
+  const [imageUploading, setImageUploading] = useState(false)
+  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
   const { currentUser } = useSelector((state) => state.user)
 
-  const handleImageSubmit = () => {
-    setUploading(true)
-    setImageUploadError(false)
+  const handleChange = (e) => {
+    if (e.target.id === 'sale' || e.target.id === 'rent') {
+      setFormData((prevFormData) => ({ ...prevFormData, type: e.target.id }))
+    }
 
-    if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
-      const promises = []
-      for (let i = 0; i < files.length; i++) {
-        promises.push(storeImage(files[i]))
-      }
+    if (
+      e.target.id === 'parking' ||
+      e.target.id === 'furnished' ||
+      e.target.id === 'offer'
+    ) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [e.target.id]: e.target.checked,
+      }))
+    }
 
-      Promise.all(promises)
-        .then((urls) => {
-          setFormData({
-            ...formData,
-            imageUrls: formData.imageUrls.concat(urls),
-          })
-          setImageUploadError(false)
-          setUploading(false)
-        })
-        .catch((err) => {
-          setImageUploadError('Image upload failed (2 mb max per image)')
-          setUploading(false)
-        })
-    } else {
-      setImageUploadError('You can only upload 6 images per listing')
-      setUploading(false)
+    if (
+      e.target.type === 'number' ||
+      e.target.type === 'text' ||
+      e.target.type === 'textarea'
+    ) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [e.target.id]: e.target.value,
+      }))
     }
   }
 
@@ -75,7 +74,7 @@ export default function CreateListing() {
         (snapshot) => {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          // console.log(`Upload is ${progress}% done`)
+          console.log(`Upload is ${progress}% done`)
         },
         (error) => reject(error),
         () => {
@@ -87,6 +86,38 @@ export default function CreateListing() {
     })
   }
 
+  const handleImageUpload = () => {
+    setImageUploading(true)
+    setImageUploadError(false)
+
+    if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
+      const promises = []
+      for (let i = 0; i < files.length; i++) {
+        promises.push(storeImage(files[i]))
+      }
+
+      Promise.all(promises)
+        .then((urls) => {
+          setFormData({
+            ...formData,
+            imageUrls: formData.imageUrls.concat(urls),
+          })
+          setImageUploadError(false)
+          setImageUploading(false)
+        })
+        .catch((err) => {
+          console.error(err)
+          setImageUploadError('Image upload failed (2 mb max per image)')
+          setImageUploading(false)
+        })
+    } else {
+      files.length === 0
+        ? setImageUploadError('No file found!')
+        : setImageUploadError('You can only upload 6 images per listing')
+      setImageUploading(false)
+    }
+  }
+
   const handleRemoveImage = (index) => {
     setFormData({
       ...formData,
@@ -94,42 +125,20 @@ export default function CreateListing() {
     })
   }
 
-  const handleChange = (e) => {
-    if (e.target.id === 'sale' || e.target.id === 'rent') {
-      setFormData({ ...formData, type: e.target.id })
-    }
-
-    if (
-      e.target.id === 'parking' ||
-      e.target.id === 'furnished' ||
-      e.target.id === 'offer'
-    ) {
-      setFormData({
-        ...formData,
-        [e.target.id]: e.target.checked,
-      })
-    }
-
-    if (
-      e.target.type === 'number' ||
-      e.target.type === 'text' ||
-      e.target.type === 'textarea'
-    ) {
-      setFormData({ ...formData, [e.target.id]: e.target.value })
-    }
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     try {
-      if (formData.imageUrls.length < 1)
+      if (formData.imageUrls.length < 1) {
         return setError('You must upload at least one image')
+      }
 
-      if (+formData.regularPrice < +formData.discountPrice)
+      if (+formData.regularPrice < +formData.discountPrice) {
         return setError('Discount price must be lower than the regular price')
+      }
+
       setLoading(true)
-      setError(false)
+      setError('')
 
       const res = await fetch('/api/listing/create', {
         method: 'POST',
@@ -153,7 +162,7 @@ export default function CreateListing() {
   }
 
   return (
-    <main className="p-4 max-w-4xl mx-auto">
+    <main className="p-6 max-w-4xl mx-auto lg:p-0">
       <h1 className="text-xl md:text-3xl font-semibold text-center my-7">
         Create a Listing
       </h1>
@@ -175,8 +184,8 @@ export default function CreateListing() {
             maxLength="62"
             minLength="10"
             required
-            onChange={handleChange}
             value={formData.name}
+            onChange={handleChange}
           />
 
           <textarea
@@ -185,8 +194,8 @@ export default function CreateListing() {
             className="border p-3 rounded-lg"
             id="description"
             required
-            onChange={handleChange}
             value={formData.description}
+            onChange={handleChange}
           />
 
           <input
@@ -195,69 +204,71 @@ export default function CreateListing() {
             className="border p-3 rounded-lg"
             id="address"
             required
-            onChange={handleChange}
             value={formData.address}
+            onChange={handleChange}
           />
 
-          <div className="flex gap-6 flex-wrap">
+          <div className="flex items-center gap-6 flex-wrap mb-4">
             <div className="flex gap-2">
               <input
                 type="checkbox"
                 id="sale"
-                className="w-5 accent-[#fca259]"
-                onChange={handleChange}
+                className="w-4 accent-[#fca259]"
                 checked={formData.type === 'sale'}
+                onChange={handleChange}
               />
-              <span>Sell</span>
+              <label>Sell</label>
             </div>
 
             <div className="flex gap-2">
               <input
                 type="checkbox"
                 id="rent"
-                className="w-5 accent-[#fca259]"
-                onChange={handleChange}
+                className="w-4 accent-[#fca259]"
                 checked={formData.type === 'rent'}
+                onChange={handleChange}
               />
-              <span>Rent</span>
+              <label>Rent</label>
             </div>
+          </div>
 
+          <div className="flex gap-6 flex-wrap mb-4">
             <div className="flex gap-2">
               <input
                 type="checkbox"
                 id="parking"
-                className="w-5 accent-[#fca259]"
-                onChange={handleChange}
+                className="w-4 accent-[#fca259]"
                 checked={formData.parking}
+                onChange={handleChange}
               />
-              <span>Parking spot</span>
+              <label>Parking spot</label>
             </div>
 
             <div className="flex gap-2">
               <input
                 type="checkbox"
                 id="furnished"
-                className="w-5 accent-[#fca259]"
-                onChange={handleChange}
+                className="w-4 accent-[#fca259]"
                 checked={formData.furnished}
+                onChange={handleChange}
               />
-              <span>Furnished</span>
+              <label>Furnished</label>
             </div>
 
             <div className="flex gap-2">
               <input
                 type="checkbox"
                 id="offer"
-                className="w-5 accent-[#fca259]"
-                onChange={handleChange}
+                className="w-4 accent-[#fca259]"
                 checked={formData.offer}
+                onChange={handleChange}
               />
-              <span>Offer</span>
+              <label>Offer</label>
             </div>
           </div>
 
           {/* Property Features */}
-          <div className="flex flex-wrap gap-6">
+          <div className="flex flex-wrap gap-6 mb-4">
             <div className="flex items-center gap-2">
               <input
                 type="number"
@@ -266,10 +277,10 @@ export default function CreateListing() {
                 max="10"
                 required
                 className="p-3 border border-gray-300 rounded-lg"
-                onChange={handleChange}
                 value={formData.bedrooms}
+                onChange={handleChange}
               />
-              <p>Beds</p>
+              <label>Beds</label>
             </div>
 
             <div className="flex items-center gap-2">
@@ -280,10 +291,10 @@ export default function CreateListing() {
                 max="10"
                 required
                 className="p-3 border border-gray-300 rounded-lg"
-                onChange={handleChange}
                 value={formData.bathrooms}
+                onChange={handleChange}
               />
-              <p>Baths</p>
+              <label>Baths</label>
             </div>
 
             <div className="flex items-center gap-2">
@@ -294,11 +305,11 @@ export default function CreateListing() {
                 max="10000000"
                 required
                 className="p-3 border border-gray-300 rounded-lg"
-                onChange={handleChange}
                 value={formData.regularPrice}
+                onChange={handleChange}
               />
               <div className="flex flex-col items-center">
-                <p>Regular price</p>
+                <label>Regular price</label>
                 <span className="text-xs">($ / month)</span>
               </div>
             </div>
@@ -312,8 +323,8 @@ export default function CreateListing() {
                   max="10000000"
                   required
                   className="p-3 border border-gray-300 rounded-lg"
-                  onChange={handleChange}
                   value={formData.discountPrice}
+                  onChange={handleChange}
                 />
 
                 <div className="flex flex-col items-center">
@@ -343,18 +354,20 @@ export default function CreateListing() {
               multiple
             />
             <button
-              disabled={uploading}
-              onClick={handleImageSubmit}
+              disabled={imageUploading}
+              onClick={handleImageUpload}
               type="button"
-              className="px-6 bg-[#191919] border text-white rounded-lg hover:shadow-lg disabled:opacity-80 disabled:cursor-not-allowed"
+              className="px-6 bg-[#191919] text-white rounded-lg hover:shadow-xl disabled:opacity-80 disabled:cursor-not-allowed transition-all duration-300"
             >
-              {uploading ? 'Uploading...' : 'Upload'}
+              {imageUploading ? 'Uploading...' : 'Upload'}
             </button>
           </div>
 
-          <p className="text-red-700 text-sm font-medium">
-            {imageUploadError && imageUploadError}
-          </p>
+          {imageUploadError && (
+            <p className="text-red-700 text-sm font-medium">
+              {imageUploadError}
+            </p>
+          )}
 
           {/* Map through the uploaded images */}
           {formData.imageUrls.length > 0 &&
@@ -379,14 +392,14 @@ export default function CreateListing() {
             ))}
 
           <button
-            disabled={loading || uploading}
+            disabled={loading || imageUploading}
             className="p-3 bg-[#fb923c] text-white font-semibold tracking-wide rounded-lg transition-all hover:opacity-85 disabled:opacity-80 disabled:cursor-not-allowed"
           >
             {loading ? (
-              <div className="flex justify-center items-center gap-1">
+              <span className="flex justify-center items-center gap-1">
                 <ClipLoader color="#ffffff" size={15} />
                 <span>Creating... </span>
-              </div>
+              </span>
             ) : (
               'Create Listing'
             )}

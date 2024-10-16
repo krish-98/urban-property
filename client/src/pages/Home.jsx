@@ -1,4 +1,4 @@
-import HomeHeader from '../components/home/HomeHeader'
+import Hero from '../components/home/Hero'
 import FeaturedProperty from '../components/home/FeaturedProperty'
 import Achievements from '../components/home/Achievements'
 import Footer from '../components/home/Footer'
@@ -6,7 +6,7 @@ import Footer from '../components/home/Footer'
 export default function Home() {
   return (
     <>
-      <HomeHeader />
+      <Hero />
       <FeaturedProperty />
       <Achievements />
       <Footer />

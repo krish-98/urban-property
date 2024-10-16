@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import House from '../../assets/house.png'
 
-export default function HomeHeader() {
+export default function Hero() {
   return (
     <header className="bg-mainColor">
       <div className="max-w-6xl mx-auto bg-mainColor py-16 flex flex-col md:flex-row gap-8 items-center lg:py-32">

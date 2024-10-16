@@ -19,8 +19,8 @@ export default function SignIn() {
   const navigate = useNavigate()
 
   const handleChange = (e) => {
-    setFormData((currentFormData) => ({
-      ...currentFormData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [e.target.name]: e.target.value,
     }))
   }
@@ -39,7 +39,7 @@ export default function SignIn() {
 
       if (data.success === false) {
         dispatch(signInFailure(data.message))
-        toast.error(error)
+        toast.error(data.message)
         return
       }
 

@@ -37,6 +37,7 @@ export default function SignUp() {
         toast.error('Email Id already exist')
         return
       }
+      toast.success(data.message)
       navigate('/sign-in')
     } catch (error) {
       toast.error(error)

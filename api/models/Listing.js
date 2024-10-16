@@ -2,6 +2,10 @@ import { model, Schema } from 'mongoose'
 
 const listingSchema = new Schema(
   {
+    imageUrls: {
+      type: Array,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -14,6 +18,18 @@ const listingSchema = new Schema(
       type: String,
       required: true,
     },
+    type: {
+      type: String,
+      required: true,
+    },
+    bedrooms: {
+      type: Number,
+      required: true,
+    },
+    bathrooms: {
+      type: Number,
+      required: true,
+    },
     regularPrice: {
       type: Number,
       required: true,
@@ -22,15 +38,7 @@ const listingSchema = new Schema(
       type: Number,
       required: true,
     },
-    bathrooms: {
-      type: Number,
-      required: true,
-    },
-    bedrooms: {
-      type: Number,
-      required: true,
-    },
-    furnished: {
+    offer: {
       type: Boolean,
       required: true,
     },
@@ -38,16 +46,8 @@ const listingSchema = new Schema(
       type: Boolean,
       required: true,
     },
-    type: {
-      type: String,
-      required: true,
-    },
-    offer: {
+    furnished: {
       type: Boolean,
-      required: true,
-    },
-    imageUrls: {
-      type: Array,
       required: true,
     },
     userRef: {
