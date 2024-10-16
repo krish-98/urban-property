@@ -5,7 +5,7 @@ import { signInSuccess } from '../app/features/user/userSlice.js'
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth'
 import { toast } from 'sonner'
 import { ClipLoader } from 'react-spinners'
-import { app } from '../firebase.js'
+import { app } from '../utils/firebase'
 
 export default function OAuth({ title }) {
   const [loading, setLoading] = useState(false)

@@ -3,7 +3,7 @@ import { model, Schema } from 'mongoose'
 const listingSchema = new Schema(
   {
     imageUrls: {
-      type: Array,
+      type: [String],
       required: true,
     },
     name: {
@@ -51,7 +51,8 @@ const listingSchema = new Schema(
       required: true,
     },
     userRef: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
   },
