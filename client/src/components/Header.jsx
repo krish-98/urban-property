@@ -58,7 +58,7 @@ export default function Header() {
     <header className="bg-white shadow-md px-4 py-3">
       <div className="flex justify-between items-center max-w-6xl mx-auto relative">
         <Link to="/">
-          <h1 className="font-bold text-sm sm:text-xl flex flex-wrap space-x-0.5">
+          <h1 className="font-bold text-sm sm:text-xl flex flex-wrap space-x-0.5 lg:text-2xl">
             <span className="text-[#fb923c]">Urban</span>
             <span className="text-[#191919]">Property</span>
           </h1>
