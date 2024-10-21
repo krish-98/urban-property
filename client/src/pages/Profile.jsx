@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  deleteObject,
   getDownloadURL,
   getStorage,
   ref,
@@ -14,16 +15,19 @@ import {
   deleteUserFailure,
   deleteUserSuccess,
 } from '../app/features/user/userSlice'
+import { toast } from 'sonner'
+
+import { ClipLoader } from 'react-spinners'
 import { IoCameraReverse } from 'react-icons/io5'
 import { RiDeleteBin2Fill } from 'react-icons/ri'
-import { ClipLoader } from 'react-spinners'
-import { toast } from 'sonner'
+import { MdFolderDelete } from 'react-icons/md'
 
 export default function Profile() {
   const fileRef = useRef(null)
-  const [file, setFile] = useState(undefined)
+  const [file, setFile] = useState(null)
   const [filePercentage, setFilePercentage] = useState(0)
   const [fileUploadError, setFileUploadError] = useState(false)
+  const [filePath, setFilePath] = useState('')
   const [formData, setFormData] = useState({})
 
   const dispatch = useDispatch()
@@ -44,9 +48,14 @@ export default function Profile() {
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app)
-    const fileName = new Date().getTime() + file.name // Unique name for the file. Incase, if the user uploads the same file twice
-    const storageRef = ref(storage, fileName)
+    const randomFileName = `${new Date().getTime()}-${file.name}`
+    const storageRef = ref(
+      storage,
+      `user-${currentUser._id}/profile-images/${randomFileName}`
+    )
     const uploadTask = uploadBytesResumable(storageRef, file)
+
+    setFilePath(`user-${currentUser._id}/profile-images/${randomFileName}`)
 
     uploadTask.on(
       'state_changed',
@@ -57,15 +66,34 @@ export default function Profile() {
       (error) => {
         setFileUploadError(true)
       },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setFormData({ ...formData, avatar: downloadURL })
-        })
+      async () => {
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          avatar: downloadURL,
+        }))
+        setTimeout(() => setFilePercentage(0), 3000)
       }
     )
   }
 
-  const handleSubmitChanges = async (e) => {
+  const handleDeleteImage = async () => {
+    try {
+      const storage = getStorage(app)
+      const deletImageRef = ref(storage, filePath)
+
+      await deleteObject(deletImageRef, { position: 'top-right' })
+      toast('Image deleted successfully!')
+
+      setFile('')
+      setFilePath('')
+      setFormData((prevFormData) => ({ ...prevFormData, avatar: '' }))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const handleSaveChanges = async (e) => {
     e.preventDefault()
 
     try {
@@ -114,28 +142,45 @@ export default function Profile() {
 
   return (
     <div className="p-3 max-w-lg mx-auto pt-28">
-      <form onSubmit={handleSubmitChanges} className="flex flex-col gap-4">
+      <form
+        onSubmit={handleSaveChanges}
+        className="flex flex-col items-center gap-4 relative"
+      >
         {/* User profile and upload btn */}
-        <div
-          className="self-center relative cursor-pointer"
-          onClick={() => fileRef.current.click()}
-        >
-          <input
-            onChange={(e) => setFile(e.target.files[0])}
-            type="file"
-            ref={fileRef}
-            accept="image/*"
-            hidden
-          />
-          <img
-            className="rounded-full h-28 w-28 object-cover cursor-pointer"
-            src={formData?.avatar || currentUser?.avatar}
-            alt="user-profile"
-          />
-          <IoCameraReverse className="w-6 h-6 absolute right-0 bottom-[0.5px]" />
+        <div className="relative">
+          <div
+            className="cursor-pointer"
+            onClick={() => fileRef.current.click()}
+          >
+            <input
+              onChange={(e) => setFile(e.target.files[0])}
+              type="file"
+              ref={fileRef}
+              accept="image/*"
+              hidden
+            />
+            <img
+              className="rounded-full h-28 w-28 object-cover cursor-pointer"
+              src={formData?.avatar || currentUser?.avatar}
+              alt="user-profile"
+            />
+            <IoCameraReverse
+              title="Upload Image"
+              className="w-6 h-6 absolute right-0 bottom-[0.5px]"
+            />
+          </div>
+
+          {/* Delete Image Icon */}
+          {filePath && formData?.avatar && (
+            <MdFolderDelete
+              onClick={handleDeleteImage}
+              title="Delete Image"
+              className="w-6 h-6 absolute -right-8 bottom-[0.5px] fill-red-500"
+            />
+          )}
         </div>
 
-        <p className="text-sm self-center">
+        <p className="text-sm">
           {fileUploadError ? (
             <span className="text-red-700">
               Error Image upload (Image must be less than 2MB)
@@ -151,11 +196,9 @@ export default function Profile() {
           )}
         </p>
 
-        <p className="text-sm self-center text-red-700 font-medium">
-          {error && error}
-        </p>
+        <p className="text-sm text-red-700 font-medium">{error && error}</p>
 
-        <div className="space-y-4">
+        <div className="space-y-4 w-full">
           <div className="flex flex-col gap-2">
             <label className="pl-1 text-sm md:text-base font-medium">
               Username
@@ -200,7 +243,7 @@ export default function Profile() {
 
         <button
           disabled={loading}
-          className="bg-[#191919] text-sm md:text-base text-white font-medium tracking-wider rounded-lg p-3 my-2 hover:opacity-90 disabled:bg-gray-600 disabled:cursor-not-allowed hover:bg-gray-800"
+          className="bg-[#191919]  w-full text-sm md:text-base text-white font-medium tracking-wider rounded-lg p-3 my-2 hover:opacity-90 disabled:bg-gray-600 disabled:cursor-not-allowed hover:bg-gray-800"
         >
           {loading ? (
             <div className="flex items-center justify-center gap-1">
