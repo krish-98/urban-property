@@ -50,7 +50,7 @@ export default function ListingItem({ listing }) {
         <div className="flex items-center justify-between my-5 gap-2 font-semibold">
           <Link
             to={`/listing/${listing._id}`}
-            className=" bg-black text-white py-2.5 px-4 rounded-lg transition duration-500 hover:text-black hover:bg-white hover:ring-black hover:border-2"
+            className=" bg-black text-white py-2.5 px-4 rounded-lg transition-all duration-500 group-hover:text-black group-hover:bg-white group-hover:ring-black group-hover:border-2"
           >
             View Details
           </Link>

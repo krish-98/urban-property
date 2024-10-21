@@ -46,7 +46,7 @@ export default function SignIn() {
       dispatch(signInSuccess(data))
       navigate('/')
       toast.success(`Welcome, ${data?.username}`, {
-        position: 'top-right',
+        position: 'bottom-right',
       })
     } catch (error) {
       dispatch(signInFailure(error.message))
