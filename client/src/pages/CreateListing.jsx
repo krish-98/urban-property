@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {
+  deleteObject,
   getDownloadURL,
   getStorage,
   ref,
@@ -9,6 +10,7 @@ import { app } from '../utils/firebase'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { ClipLoader } from 'react-spinners'
+import { MdDeleteForever } from 'react-icons/md'
 
 export default function CreateListing() {
   const [files, setFiles] = useState([])
@@ -28,11 +30,13 @@ export default function CreateListing() {
   })
   const [imageUploadError, setImageUploadError] = useState(false)
   const [imageUploading, setImageUploading] = useState(false)
+  const [imageUploadProgress, setImageUploadProgress] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [imageFilepaths, setImageFilePaths] = useState([])
 
-  const navigate = useNavigate()
   const { currentUser } = useSelector((state) => state.user)
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     if (e.target.id === 'sale' || e.target.id === 'rent') {
@@ -65,22 +69,36 @@ export default function CreateListing() {
   const storeImage = async (file) => {
     return new Promise((resolve, reject) => {
       const storage = getStorage(app)
-      const fileName = new Date().getTime() + file.name
-      const storageRef = ref(storage, fileName)
+      const randomFileName = `${new Date().getTime()}-${file.name}`
+      const storageRef = ref(
+        storage,
+        `user-${currentUser._id}/property-images/${randomFileName}`
+      )
+
+      // Grabbing the file path for future reference
+      setImageFilePaths((prevFilepath) => [
+        ...prevFilepath,
+        `user-${currentUser._id}/property-images/${randomFileName}`,
+      ])
 
       const uploadTask = uploadBytesResumable(storageRef, file)
+
       uploadTask.on(
         'state_changed',
         (snapshot) => {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          console.log(`Upload is ${progress}% done`)
+
+          if (progress > 0 && progress < 100) {
+            setImageUploadProgress(`Upload is ${progress}% done`)
+          }
+          console.log(progress)
+          setImageUploadProgress('')
         },
         (error) => reject(error),
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            resolve(downloadURL)
-          })
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
+          resolve(downloadURL)
         }
       )
     })
@@ -98,10 +116,10 @@ export default function CreateListing() {
 
       Promise.all(promises)
         .then((urls) => {
-          setFormData({
-            ...formData,
-            imageUrls: formData.imageUrls.concat(urls),
-          })
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            imageUrls: prevFormData.imageUrls.concat(urls),
+          }))
           setImageUploadError(false)
           setImageUploading(false)
         })
@@ -118,11 +136,24 @@ export default function CreateListing() {
     }
   }
 
-  const handleRemoveImage = (index) => {
-    setFormData({
-      ...formData,
-      imageUrls: formData.imageUrls.filter((_, i) => i !== index),
-    })
+  const handleRemoveImage = async (index) => {
+    try {
+      const storage = getStorage(app)
+      const imageDeletionRef = ref(storage, `${imageFilepaths[index]}`)
+
+      await deleteObject(imageDeletionRef)
+
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        imageUrls: prevFormData.imageUrls.filter((_, i) => i !== index),
+      }))
+
+      setImageFilePaths((prevFilepath) =>
+        prevFilepath.filter((_, i) => i !== index)
+      )
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -154,7 +185,7 @@ export default function CreateListing() {
         setError(data.message)
       }
 
-      navigate(`/listing/${data._id}`)
+      navigate(`/listing/${data.message._id}`)
     } catch (error) {
       setError(error.message)
       setLoading(false)
@@ -369,25 +400,36 @@ export default function CreateListing() {
             </p>
           )}
 
+          {imageUploadProgress && (
+            <p className="text-teal-500 text-sm font-medium">
+              {imageUploadProgress}
+            </p>
+          )}
+
           {/* Map through the uploaded images */}
           {formData.imageUrls.length > 0 &&
             formData.imageUrls.map((url, index) => (
               <div
                 key={url}
-                className="flex justify-between p-3 border items-center"
+                className="flex justify-between gap-8 py-3 px-4 border items-center rounded-lg"
               >
                 <img
                   src={url}
                   alt="listing image"
-                  className="w-20 h-20 object-contain rounded-lg"
+                  className="w-44 object-contain rounded-lg"
                 />
-                <button
+                <div
                   onClick={() => handleRemoveImage(index)}
-                  type="button"
-                  className="p-3 text-red-700 uppercase hover:opacity-75"
+                  className="flex items-center bg-red-500 text-white px-2 rounded-xl cursor-pointer hover:bg-red-400"
                 >
-                  Delete
-                </button>
+                  <button
+                    type="button"
+                    className="p-2 font-light text-sm xl:text-base"
+                  >
+                    Delete
+                  </button>
+                  <MdDeleteForever className="w-6 h-6" />
+                </div>
               </div>
             ))}
 

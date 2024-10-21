@@ -6,21 +6,19 @@ import CopyToClipboard from '../components/CopyToClipboard'
 import Contact from './Contact'
 
 // Swiper imports
-import SwiperCore from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation } from 'swiper/modules'
-import 'swiper/css/bundle'
+import 'swiper/css'
+import 'swiper/css/navigation'
 
 export default function Listing() {
-  SwiperCore.use([Navigation])
-
   const [listing, setListing] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [contact, setContact] = useState(false)
 
-  const params = useParams()
   const { currentUser } = useSelector((state) => state.user)
+  const params = useParams()
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -68,8 +66,7 @@ export default function Listing() {
 
       {listing && !loading && !error && (
         <div>
-          {/* Image Swiper */}
-          <Swiper navigation>
+          <Swiper modules={[Navigation]} navigation>
             {listing.imageUrls.map((url) => (
               <SwiperSlide key={url}>
                 <div
