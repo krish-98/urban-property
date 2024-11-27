@@ -1,5 +1,5 @@
 import { CiSearch } from 'react-icons/ci'
-import { FaEye, FaHandPaper } from 'react-icons/fa'
+import { FaEye } from 'react-icons/fa'
 import { FaHouseChimneyWindow } from 'react-icons/fa6'
 import { RiEmotionHappyLine } from 'react-icons/ri'
 import { FaFireAlt } from 'react-icons/fa'

@@ -11,7 +11,7 @@ export default function ListingItem({ listing }) {
       <img
         src={listing.imageUrls[0]}
         alt="listing cover"
-        className="h-[320px] sm:h-[220px] w-full object-cover group-hover:scale-105 transition-all duration-300"
+        className="h-[320px] sm:h-[220px] w-full object-cover group-hover:scale-105 transition-all duration-500"
       />
 
       <div className="p-5 flex flex-col justify-between gap-2">
@@ -50,7 +50,7 @@ export default function ListingItem({ listing }) {
         <div className="flex items-center justify-between my-5 gap-2 font-semibold">
           <Link
             to={`/listing/${listing._id}`}
-            className=" bg-black text-white py-2.5 px-4 rounded-lg transition-all duration-500 group-hover:text-black group-hover:bg-white group-hover:ring-black group-hover:border-2"
+            className=" bg-black text-white py-2.5 px-4 rounded-lg transition-all duration-500 group-hover:bg-white group-hover:border group-hover:text-black"
           >
             View Details
           </Link>
