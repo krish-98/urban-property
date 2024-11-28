@@ -15,7 +15,6 @@ export default function Listing() {
   const [listing, setListing] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  const [contact, setContact] = useState(false)
 
   const { currentUser } = useSelector((state) => state.user)
   const params = useParams()
@@ -85,12 +84,9 @@ export default function Listing() {
           <div className="max-w-4xl mx-auto p-4 space-y-4 pb-14">
             <PropertyInfo listing={listing} />
 
-            <Contact listing={listing} />
-            {/* {currentUser && listing.userRef !== currentUser._id && !contact && (
-              <div>
-                <Contact listing={listing} />
-              </div>
-            )} */}
+            {currentUser?._id !== listing?.userRef?._id && (
+              <Contact listing={listing} />
+            )}
           </div>
         </div>
       )}

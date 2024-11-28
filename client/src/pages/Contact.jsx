@@ -42,9 +42,11 @@ export default function Contact({ listing }) {
                   <h6 className="capitalize text-sm tracking-wide font-semibold md:text-base">
                     {landlord?.username}
                   </h6>
-                  <p className="text-sm text-gray-500 md:text-base">
-                    {landlord?.email}
-                  </p>
+                  {currentUser && (
+                    <p className="text-sm text-gray-500 md:text-base">
+                      {landlord?.email}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
