@@ -35,8 +35,8 @@ export default function CreateListing() {
   const [loading, setLoading] = useState(false)
   const [imageFilepaths, setImageFilePaths] = useState([])
 
-  const { currentUser } = useSelector((state) => state.user)
   const navigate = useNavigate()
+  const { currentUser } = useSelector((state) => state.user)
 
   const handleChange = (e) => {
     if (e.target.id === 'sale' || e.target.id === 'rent') {

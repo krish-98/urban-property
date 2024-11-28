@@ -287,7 +287,7 @@ export default function Search() {
               onClick={handleShowMore}
             >
               Show more
-            </button>
+            </button> //You’ve reached the end of the list
           )}
         </div>
       </div>
