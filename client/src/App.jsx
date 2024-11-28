@@ -1,21 +1,17 @@
 import { lazy, useEffect } from 'react'
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { getCookie } from './utils/getCookie'
+import { signOutUserSuccess } from './app/features/user/userSlice'
+
 import Header from './components/Header'
-import Home from './pages/Home'
 import SuspenseWrapper from './components/SuspenseWrapper'
+import Home from './pages/Home'
 import Profile from './pages/Profile'
 import CreateListing from './pages/CreateListing'
 import UpdateListing from './pages/UpdateListing'
 import MyListing from './pages/MyListing'
-import { getCookie } from './utils/getCookie'
-import { signOutUserSuccess } from './app/features/user/userSlice'
 
 const PrivateRoute = lazy(() => import('./components/PrivateRoute'))
 const SignIn = lazy(() => import('./pages/SignIn'))
@@ -36,7 +32,7 @@ export default function App() {
   }, [])
 
   return (
-    <Router>
+    <BrowserRouter>
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -86,6 +82,6 @@ export default function App() {
           element={<SuspenseWrapper component={<NotFound />} />}
         />
       </Routes>
-    </Router>
+    </BrowserRouter>
   )
 }

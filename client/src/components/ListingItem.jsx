@@ -50,17 +50,17 @@ export default function ListingItem({ listing }) {
         <div className="flex items-center justify-between my-5 gap-2 font-semibold">
           <Link
             to={`/listing/${listing._id}`}
-            className=" bg-black text-white py-2.5 px-4 rounded-lg transition-all duration-500 group-hover:bg-white group-hover:border group-hover:text-black"
+            className="bg-black text-sm lg:text-base text-white py-2.5 px-4 rounded-lg transition-all duration-500 group-hover:bg-white group-hover:border group-hover:text-black"
           >
             View Details
           </Link>
 
-          <p className="text-black">
+          <p className="text-black text-sm lg:text-lg">
             ${' '}
             {listing.offer
               ? listing.discountPrice.toLocaleString('en-US')
               : listing.regularPrice.toLocaleString('en-US')}
-            {listing.type === 'rent' && '/month'}
+            {/* {listing.type === 'rent' && '/month'} */}
           </p>
         </div>
       </div>

@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { motion } from 'framer-motion'
 import { FaSearch } from 'react-icons/fa'
 import {
   signOutUserFailure,
   signOutUserStart,
   signOutUserSuccess,
 } from '../app/features/user/userSlice'
-import { motion } from 'framer-motion'
 
 export default function Header() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -55,16 +55,15 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-white shadow-md px-5 py-3">
-      <div className="flex justify-between items-center max-w-6xl mx-auto relative">
+    <header className="bg-white shadow-md px-4 py-4">
+      <nav className="flex justify-between items-center max-w-6xl mx-auto relative">
         <Link to="/">
-          <h1 className="font-bold sm:text-xl flex flex-wrap space-x-0.5 lg:text-2xl">
+          <h1 className="font-bold flex flex-wrap space-x-0.5 sm:text-xl lg:text-3xl">
             <span className="text-[#fb923c]">Urban</span>
             <span className="text-[#191919]">Property</span>
           </h1>
         </Link>
 
-        {/* Search bar */}
         <form
           onSubmit={handleSubmit}
           className="ring-mainColor ring-2 p-1.5 md:p-3 rounded-lg flex items-center gap-1.5"
@@ -97,7 +96,9 @@ export default function Header() {
           )}
 
           {currentUser ? (
-            <img
+            <motion.img
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.85 }}
               onClick={handleToggle}
               className="rounded-full h-10 w-10 object-cover cursor-pointer"
               src={currentUser?.avatar}
@@ -126,21 +127,21 @@ export default function Header() {
               <Link
                 to="/profile"
                 onClick={handleToggle}
-                className="text-sm lg:text-base lg:font-medium tracking-wide pb-1 hover:opacity-70 hover:text-[#fb9242] hover:underline hover:underline-offset-4"
+                className="text-sm lg:text-base tracking-wide pb-1 hover:opacity-70 hover:text-[#fb9242] hover:underline hover:underline-offset-4"
               >
                 Profile
               </Link>
               <Link
                 to="/create-listing"
                 onClick={handleToggle}
-                className="text-sm lg:text-base lg:font-medium tracking-wide pb-1 hover:opacity-70 hover:text-[#fb9242] hover:underline hover:underline-offset-4"
+                className="text-sm lg:text-base tracking-wide pb-1 hover:opacity-70 hover:text-[#fb9242] hover:underline hover:underline-offset-4"
               >
                 Create Listing
               </Link>
               <Link
                 to="/my-listing"
                 onClick={handleToggle}
-                className="text-sm lg:text-base lg:font-medium tracking-wide pb-1 hover:opacity-70 hover:text-[#fb9242] hover:underline hover:underline-offset-4 md:hidden"
+                className="text-sm lg:text-base tracking-wide pb-1 hover:opacity-70 hover:text-[#fb9242] hover:underline hover:underline-offset-4 md:hidden"
               >
                 My Listing
               </Link>
@@ -149,14 +150,14 @@ export default function Header() {
                   handleSignOut()
                   handleToggle()
                 }}
-                className="text-sm lg:text-base lg:font-medium tracking-wide cursor-pointer hover:opacity-70 hover:text-[#fb9242] hover:underline hover:underline-offset-4"
+                className="text-sm lg:text-base tracking-wide cursor-pointer hover:opacity-70 hover:text-[#fb9242] hover:underline hover:underline-offset-4"
               >
                 Sign out
               </p>
             </div>
           </>
         )}
-      </div>
+      </nav>
     </header>
   )
 }

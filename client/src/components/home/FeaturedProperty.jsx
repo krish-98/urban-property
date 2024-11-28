@@ -64,7 +64,7 @@ export default function FeaturedProperty() {
   return (
     <main>
       <div className="max-w-6xl mx-auto p-3 flex flex-col justify-center items-center gap-8 my-10 px-6">
-        <h3 className="text-2xl font-bold">Feaured Properties</h3>
+        <h3 className="font-bold text-xl lg:text-2xl">Featured Properties</h3>
 
         {loading ? (
           <CircleLoader size={50} color="#fb923c" />
@@ -73,7 +73,7 @@ export default function FeaturedProperty() {
             {offerListings && offerListings.length > 0 && (
               <div>
                 <div className="my-2">
-                  <h2 className="text-xl font-semibold text-slate-600">
+                  <h2 className="lg:text-xl font-semibold text-slate-600">
                     Recent offers
                   </h2>
                   <Link
@@ -94,7 +94,7 @@ export default function FeaturedProperty() {
             {rentListings && rentListings.length > 0 && (
               <div>
                 <div className="my-2">
-                  <h2 className="text-xl font-semibold text-slate-600">
+                  <h2 className="lg:text-xl font-semibold text-slate-600">
                     Recent Rent Properties
                   </h2>
                   <Link
@@ -115,7 +115,7 @@ export default function FeaturedProperty() {
             {saleListings && saleListings.length > 0 && (
               <div>
                 <div className="my-2">
-                  <h2 className="text-xl font-semibold text-slate-600">
+                  <h2 className="lg:text-xl font-semibold text-slate-600">
                     Recent Sale Properties
                   </h2>
                   <Link

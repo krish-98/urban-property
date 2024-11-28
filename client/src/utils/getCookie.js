@@ -3,7 +3,7 @@ export const getCookie = () => {
   let token
 
   for (let cookie of cookies) {
-    if (cookie.includes('access_token')) {
+    if (cookie.includes('token')) {
       const value = cookie.split('=')[1]
       token = value
     }

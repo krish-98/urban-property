@@ -117,7 +117,7 @@ export default function Search() {
     navigate(`/search?${searchQuery}`)
   }
 
-  const onShowMoreClick = async () => {
+  const handleShowMore = async () => {
     const numberOfListings = listings.length
     const startIndex = numberOfListings
     const urlParams = new URLSearchParams(location.search)
@@ -136,7 +136,7 @@ export default function Search() {
     <div className="bg-[#fffaf7]">
       <div className="max-w-6xl mx-auto p-4">
         <div>
-          <h2 className="font-semibold text-xl my-4 lg:text-2xl">
+          <h2 className="font-semibold my-4 md:text-xl lg:text-2xl">
             Find Property
           </h2>
 
@@ -284,7 +284,7 @@ export default function Search() {
           {showMore && (
             <button
               className="text-[#fb923c] hover:underline p-7 text-center w-full"
-              onClick={onShowMoreClick}
+              onClick={handleShowMore}
             >
               Show more
             </button>
