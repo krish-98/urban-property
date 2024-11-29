@@ -1,35 +1,89 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, lazy } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
-function App() {
-  const [count, setCount] = useState(0)
+import { useAppDispatch, useAppSelector } from './app/hooks'
+import { signOutUserSuccess } from './app/features/user/userSlice'
+
+import { getCookie } from './utils/getCookie'
+
+import Header from './components/Header'
+import SuspenseWrapper from './components/SuspenseWrapper'
+import Home from './pages/Home'
+import Profile from './pages/Profile'
+import CreateListing from './pages/CreateListing'
+import UpdateListing from './pages/UpdateListing'
+import MyListing from './pages/MyListing'
+
+// Lazy loading
+const PrivateRoute = lazy(() => import('./components/PrivateRoute'))
+const SignIn = lazy(() => import('./pages/SignIn'))
+const SignUp = lazy(() => import('./pages/SignUp'))
+const About = lazy(() => import('./pages/About'))
+const Search = lazy(() => import('./pages/Search'))
+const Listing = lazy(() => import('./pages/Listing'))
+const NotFound = lazy(() => import('./pages/NotFound'))
+
+export default function App() {
+  const dispatch = useAppDispatch()
+  const { currentUser } = useAppSelector((state) => state.user)
+
+  useEffect(() => {
+    if (!getCookie()) {
+      dispatch(signOutUserSuccess())
+    }
+  }, [])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/sign-in"
+          element={
+            !currentUser?._id ? (
+              <SuspenseWrapper component={<SignIn />} />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="/sign-up"
+          element={
+            !currentUser?._id ? (
+              <SuspenseWrapper component={<SignUp />} />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="/about"
+          element={<SuspenseWrapper component={<About />} />}
+        />
+        <Route
+          path="/search"
+          element={<SuspenseWrapper component={<Search />} />}
+        />
+        <Route
+          path="/listing/:listingId"
+          element={<SuspenseWrapper component={<Listing />} />}
+        />
+        <Route element={<SuspenseWrapper component={<PrivateRoute />} />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/create-listing" element={<CreateListing />} />
+          <Route path="/my-listing" element={<MyListing />} />
+          <Route
+            path="/update-listing/:listingId"
+            element={<UpdateListing />}
+          />
+        </Route>
+        <Route
+          path="*"
+          element={<SuspenseWrapper component={<NotFound />} />}
+        />
+      </Routes>
+    </BrowserRouter>
   )
 }
-
-export default App
