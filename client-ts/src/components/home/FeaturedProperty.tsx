@@ -3,6 +3,26 @@ import { Link } from 'react-router-dom'
 import { CircleLoader } from 'react-spinners'
 import ListingItem from '../ListingItem'
 
+export interface ListingProps {
+  _id: string
+  imageUrls: string[]
+  name: string
+  description: string
+  address: string
+  type: 'rent' | 'sale'
+  bedrooms: number
+  bathrooms: number
+  regularPrice: number
+  discountPrice?: number
+  offer: boolean
+  parking: boolean
+  furnished: boolean
+  userRef: string
+  createdAt: string
+  updatedAt: string
+  // __v: number
+}
+
 export default function FeaturedProperty() {
   const [loading, setLoading] = useState(false)
   const [offerListings, setOfferListings] = useState([])
@@ -63,7 +83,7 @@ export default function FeaturedProperty() {
 
   return (
     <main>
-      <div className="max-w-6xl mx-auto p-3 flex flex-col justify-center items-center gap-8 my-10 px-6">
+      <div className="max-w-6xl mx-auto p-3 flex flex-col justify-center items-center gap-8 my-10 xl:gap-12">
         <h3 className="font-bold text-xl lg:text-2xl">Featured Properties</h3>
 
         {loading ? (
@@ -71,8 +91,8 @@ export default function FeaturedProperty() {
         ) : (
           <>
             {offerListings && offerListings.length > 0 && (
-              <div>
-                <div className="my-2">
+              <div className="flex flex-col px-4 gap-4">
+                <div className="">
                   <h2 className="lg:text-xl font-semibold text-slate-600">
                     Recent offers
                   </h2>
@@ -83,8 +103,8 @@ export default function FeaturedProperty() {
                     Show more
                   </Link>
                 </div>
-                <div className="flex flex-wrap justify-center gap-6 xl:justify-between">
-                  {offerListings.map((listing) => (
+                <div className="flex flex-wrap justify-center gap-6 xl:gap-8 xl:justify-between">
+                  {offerListings.map((listing: ListingProps) => (
                     <ListingItem listing={listing} key={listing._id} />
                   ))}
                 </div>
@@ -92,8 +112,8 @@ export default function FeaturedProperty() {
             )}
 
             {rentListings && rentListings.length > 0 && (
-              <div>
-                <div className="my-2">
+              <div className="flex flex-col px-4 gap-4">
+                <div className="">
                   <h2 className="lg:text-xl font-semibold text-slate-600">
                     Recent Rent Properties
                   </h2>
@@ -104,8 +124,8 @@ export default function FeaturedProperty() {
                     Show more
                   </Link>
                 </div>
-                <div className="flex flex-wrap justify-center gap-6 xl:justify-between">
-                  {rentListings.map((listing) => (
+                <div className="flex flex-wrap justify-center gap-6 xl:gap-8 xl:justify-between">
+                  {rentListings.map((listing: ListingProps) => (
                     <ListingItem listing={listing} key={listing._id} />
                   ))}
                 </div>
@@ -113,8 +133,8 @@ export default function FeaturedProperty() {
             )}
 
             {saleListings && saleListings.length > 0 && (
-              <div>
-                <div className="my-2">
+              <div className="flex flex-col px-4 gap-4">
+                <div className="">
                   <h2 className="lg:text-xl font-semibold text-slate-600">
                     Recent Sale Properties
                   </h2>
@@ -125,8 +145,8 @@ export default function FeaturedProperty() {
                     Show more
                   </Link>
                 </div>
-                <div className="flex flex-wrap justify-center gap-6 xl:justify-between">
-                  {saleListings.map((listing) => (
+                <div className="flex flex-wrap justify-center gap-6 xl:gap-8 xl:justify-between">
+                  {saleListings.map((listing: ListingProps) => (
                     <ListingItem listing={listing} key={listing._id} />
                   ))}
                 </div>

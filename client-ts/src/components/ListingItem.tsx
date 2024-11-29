@@ -2,7 +2,9 @@ import { Link } from 'react-router-dom'
 import { MdLocationOn } from 'react-icons/md'
 import { FaBath, FaBed } from 'react-icons/fa'
 
-export default function ListingItem({ listing }) {
+import { ListingProps } from './home/FeaturedProperty'
+
+export default function ListingItem({ listing }: { listing: ListingProps }) {
   return (
     <Link
       to={`/listing/${listing._id}`}
@@ -58,7 +60,7 @@ export default function ListingItem({ listing }) {
           <p className="text-black text-sm lg:text-lg">
             ${' '}
             {listing.offer
-              ? listing.discountPrice.toLocaleString('en-US')
+              ? listing.discountPrice?.toLocaleString('en-US')
               : listing.regularPrice.toLocaleString('en-US')}
             {/* {listing.type === 'rent' && '/month'} */}
           </p>
