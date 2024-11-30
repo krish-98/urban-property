@@ -1,22 +1,22 @@
-import { useState } from 'react'
+import { ChangeEvent, MouseEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { ListingProps } from '../types'
+import { useAppSelector } from '../app/hooks'
 
-export default function Contact({ listing }) {
-  const [owner, setOwner] = useState(null)
-  const [message, setMessage] = useState('')
+export default function Contact({ listing }: { listing: ListingProps }) {
+  const [message, setMessage] = useState<string>('')
 
-  const { currentUser } = useSelector((state) => state.user)
+  const { currentUser } = useAppSelector((state) => state.user)
 
   const { userRef: landlord } = listing
 
-  const handleOnChange = (e) => {
+  const handleOnChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value)
   }
 
-  const handleSendMessage = () => {
+  const handleSendMessage = (e: MouseEvent<HTMLAnchorElement>) => {
     if (message.length < 10) {
-      event.preventDefault()
+      e.preventDefault()
       alert(
         'Your messsage is less than 10 characters. Type something meaningful ✌🏼'
       )
@@ -73,7 +73,7 @@ export default function Contact({ listing }) {
                 <textarea
                   name="message"
                   id="message"
-                  rows="2"
+                  rows={2}
                   value={message}
                   onChange={handleOnChange}
                   placeholder="Enter your message here..."

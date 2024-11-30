@@ -1,4 +1,10 @@
-import { useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ClipLoader } from 'react-spinners'
+import { FormData } from '../types'
+import { useAppSelector } from '../app/hooks'
+import { MdDeleteForever } from 'react-icons/md'
+
 import {
   deleteObject,
   getDownloadURL,
@@ -7,14 +13,10 @@ import {
   uploadBytesResumable,
 } from 'firebase/storage'
 import { app } from '../utils/firebase'
-import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { ClipLoader } from 'react-spinners'
-import { MdDeleteForever } from 'react-icons/md'
 
 export default function CreateListing() {
-  const [files, setFiles] = useState([])
-  const [formData, setFormData] = useState({
+  const [files, setFiles] = useState<FileList | null>(null)
+  const [formData, setFormData] = useState<FormData>({
     imageUrls: [],
     name: '',
     description: '',
@@ -28,45 +30,48 @@ export default function CreateListing() {
     parking: false,
     furnished: false,
   })
-  const [imageUploadError, setImageUploadError] = useState(false)
-  const [imageUploading, setImageUploading] = useState(false)
-  const [imageUploadProgress, setImageUploadProgress] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [imageFilepaths, setImageFilePaths] = useState([])
+  const [imageUploadError, setImageUploadError] = useState<string>('')
+  const [imageUploading, setImageUploading] = useState<boolean>(false)
+  const [imageUploadProgress, setImageUploadProgress] = useState<string>('')
+  const [error, setError] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
+  const [imageFilepaths, setImageFilePaths] = useState<string[]>([])
 
   const navigate = useNavigate()
-  const { currentUser } = useSelector((state) => state.user)
+  const { currentUser } = useAppSelector((state) => state.user)
 
-  const handleChange = (e) => {
-    if (e.target.id === 'sale' || e.target.id === 'rent') {
-      setFormData((prevFormData) => ({ ...prevFormData, type: e.target.id }))
-    }
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { id, value, type } = e.target
 
-    if (
-      e.target.id === 'parking' ||
-      e.target.id === 'furnished' ||
-      e.target.id === 'offer'
-    ) {
+    // Narrowing for `checked`
+    const checked =
+      e.target instanceof HTMLInputElement ? e.target.checked : undefined
+
+    if (id === 'sale' || id === 'rent') {
       setFormData((prevFormData) => ({
         ...prevFormData,
-        [e.target.id]: e.target.checked,
+        type: id as 'rent' | 'sale',
       }))
     }
 
-    if (
-      e.target.type === 'number' ||
-      e.target.type === 'text' ||
-      e.target.type === 'textarea'
-    ) {
+    if (id === 'parking' || id === 'furnished' || id === 'offer') {
       setFormData((prevFormData) => ({
         ...prevFormData,
-        [e.target.id]: e.target.value,
+        [id]: checked,
+      }))
+    }
+
+    if (type === 'number' || type === 'text' || type === 'textarea') {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [id]: value,
       }))
     }
   }
 
-  const storeImage = async (file) => {
+  const storeImage = async (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const storage = getStorage(app)
       const randomFileName = `${new Date().getTime()}-${file.name}`
@@ -106,10 +111,15 @@ export default function CreateListing() {
 
   const handleImageUpload = () => {
     setImageUploading(true)
-    setImageUploadError(false)
+    setImageUploadError('')
 
-    if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
+    if (
+      files &&
+      files.length > 0 &&
+      files.length + formData.imageUrls.length < 7
+    ) {
       const promises = []
+
       for (let i = 0; i < files.length; i++) {
         promises.push(storeImage(files[i]))
       }
@@ -120,7 +130,7 @@ export default function CreateListing() {
             ...prevFormData,
             imageUrls: prevFormData.imageUrls.concat(urls),
           }))
-          setImageUploadError(false)
+          setImageUploadError('')
           setImageUploading(false)
         })
         .catch((err) => {
@@ -129,14 +139,16 @@ export default function CreateListing() {
           setImageUploading(false)
         })
     } else {
-      files.length === 0
-        ? setImageUploadError('No file found!')
-        : setImageUploadError('You can only upload 6 images per listing')
+      if (files?.length === 0) {
+        setImageUploadError('No file found!')
+      } else {
+        setImageUploadError('You can only upload 6 images per listing')
+      }
       setImageUploading(false)
     }
   }
 
-  const handleRemoveImage = async (index) => {
+  const handleRemoveImage = async (index: number) => {
     try {
       const storage = getStorage(app)
       const imageDeletionRef = ref(storage, `${imageFilepaths[index]}`)
@@ -156,7 +168,7 @@ export default function CreateListing() {
     }
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     try {
@@ -181,13 +193,18 @@ export default function CreateListing() {
       const data = await res.json()
 
       setLoading(false)
+
       if (data.success === false) {
         setError(data.message)
       }
 
       navigate(`/listing/${data.message._id}`)
     } catch (error) {
-      setError(error.message)
+      if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError('An unknown error occurred')
+      }
       setLoading(false)
     }
   }
@@ -212,15 +229,14 @@ export default function CreateListing() {
             placeholder="Name"
             className="border p-3 rounded-lg"
             id="name"
-            maxLength="62"
-            minLength="10"
+            maxLength={62}
+            minLength={10}
             required
             value={formData.name}
             onChange={handleChange}
           />
 
           <textarea
-            type="text"
             placeholder="Description"
             className="border p-3 rounded-lg"
             id="description"

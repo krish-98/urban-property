@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
+import { toast } from 'sonner'
+
 import {
   deleteObject,
   getDownloadURL,
@@ -8,6 +9,8 @@ import {
   uploadBytesResumable,
 } from 'firebase/storage'
 import { app } from '../utils/firebase'
+
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import {
   updateUserStart,
   updateUserSuccess,
@@ -15,38 +18,46 @@ import {
   deleteUserFailure,
   deleteUserSuccess,
 } from '../app/features/user/userSlice'
-import { toast } from 'sonner'
 
 import { ClipLoader } from 'react-spinners'
 import { IoCameraReverse } from 'react-icons/io5'
 import { RiDeleteBin2Fill } from 'react-icons/ri'
 import { MdFolderDelete } from 'react-icons/md'
 
-export default function Profile() {
-  const fileRef = useRef(null)
-  const [file, setFile] = useState(null)
-  const [filePercentage, setFilePercentage] = useState(0)
-  const [fileUploadError, setFileUploadError] = useState(false)
-  const [filePath, setFilePath] = useState('')
-  const [formData, setFormData] = useState({})
+interface FormData {
+  username?: string
+  email?: string
+  password?: string
+  avatar?: string
+}
 
-  const dispatch = useDispatch()
-  const { currentUser, loading, error } = useSelector((store) => store.user)
+export default function Profile() {
+  const [file, setFile] = useState<File | null>(null)
+  const [filePercentage, setFilePercentage] = useState<number>(0)
+  const [fileUploadError, setFileUploadError] = useState<boolean>(false)
+  const [filePath, setFilePath] = useState<string>('')
+  const [formData, setFormData] = useState<FormData>({})
+
+  const fileRef = useRef<HTMLInputElement | null>(null)
+
+  const dispatch = useAppDispatch()
+  const { currentUser, loading, error } = useAppSelector((store) => store.user)
 
   useEffect(() => {
     if (file) {
       handleFileUpload(file)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file])
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData((currentFormData) => ({
       ...currentFormData,
       [e.target.id]: e.target.value,
     }))
   }
 
-  const handleFileUpload = (file) => {
+  const handleFileUpload = (file: File) => {
     const storage = getStorage(app)
     const randomFileName = `${new Date().getTime()}-${file.name}`
     const storageRef = ref(
@@ -65,14 +76,26 @@ export default function Profile() {
       },
       (error) => {
         setFileUploadError(true)
+        console.error('File upload error:', error.message)
       },
       async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          avatar: downloadURL,
-        }))
-        setTimeout(() => setFilePercentage(0), 3000)
+        try {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            avatar: downloadURL,
+          }))
+
+          toast.success('Image uploaded successfully!')
+
+          setTimeout(() => setFilePercentage(0), 3000)
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            console.error('Error fetching download URL:', error.message)
+          } else {
+            console.error('Error fetching download URL:', error)
+          }
+        }
       }
     )
   }
@@ -82,10 +105,10 @@ export default function Profile() {
       const storage = getStorage(app)
       const deletImageRef = ref(storage, filePath)
 
-      await deleteObject(deletImageRef, { position: 'top-right' })
-      toast('Image deleted successfully!')
+      await deleteObject(deletImageRef)
+      toast.success('Image deleted successfully!')
 
-      setFile('')
+      setFile(null)
       setFilePath('')
       setFormData((prevFormData) => ({ ...prevFormData, avatar: '' }))
     } catch (error) {
@@ -93,11 +116,12 @@ export default function Profile() {
     }
   }
 
-  const handleSaveChanges = async (e) => {
+  const handleSaveChanges = async (e: FormEvent) => {
     e.preventDefault()
 
     try {
       dispatch(updateUserStart())
+
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
         method: 'PUT',
         headers: {
@@ -106,6 +130,7 @@ export default function Profile() {
         body: JSON.stringify(formData),
       })
       const data = await res.json()
+
       if (data.success === false) {
         dispatch(updateUserFailure(data.message))
         return
@@ -115,28 +140,45 @@ export default function Profile() {
       toast.success('Account updated successfully!', {
         position: 'bottom-right',
       })
-    } catch (error) {
-      dispatch(updateUserFailure(error.message))
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        dispatch(updateUserFailure(error.message))
+      } else {
+        console.error(
+          'An unexpected error occurred during save changes:',
+          error
+        )
+        dispatch(updateUserFailure('An unexpected error occurred'))
+      }
     }
   }
 
   const handleDeleteAccount = async () => {
-    alert('Are you want to delete your account?')
+    const confirmDialog = confirm('Are you want to delete your account?')
 
     try {
-      dispatch(deleteUserSuccess())
-      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
-        method: 'DELETE',
-      })
-      const data = await res.json()
-      if (data.success === false) {
-        dispatch(deleteUserFailure(data.message))
-        return
+      if (confirmDialog) {
+        dispatch(deleteUserSuccess())
+        const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+          method: 'DELETE',
+        })
+        const data = await res.json()
+        if (data.success === false) {
+          dispatch(deleteUserFailure(data.message))
+          return
+        }
+        dispatch(deleteUserSuccess(data))
       }
-
-      dispatch(deleteUserSuccess(data))
-    } catch (error) {
-      dispatch(deleteUserFailure(error.message))
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        dispatch(deleteUserFailure(error.message))
+      } else {
+        console.error(
+          'An unexpected error occurred during account deletion:',
+          error
+        )
+        dispatch(deleteUserFailure('An unexpected error occurred'))
+      }
     }
   }
 
@@ -150,10 +192,10 @@ export default function Profile() {
         <div className="relative">
           <div
             className="cursor-pointer"
-            onClick={() => fileRef.current.click()}
+            onClick={() => fileRef.current?.click()}
           >
             <input
-              onChange={(e) => setFile(e.target.files[0])}
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
               type="file"
               ref={fileRef}
               accept="image/*"

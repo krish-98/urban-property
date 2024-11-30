@@ -1,8 +1,9 @@
-import { useSelector } from 'react-redux'
 import { Outlet, Navigate } from 'react-router-dom'
+import { useAppSelector } from '../app/hooks'
 import SuspenseWrapper from './SuspenseWrapper'
+
 export default function PrivateRoute() {
-  const { currentUser } = useSelector((state) => state.user)
+  const { currentUser } = useAppSelector((state) => state.user)
 
   return currentUser ? (
     <SuspenseWrapper component={<Outlet />} />

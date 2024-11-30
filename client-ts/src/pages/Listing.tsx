@@ -1,22 +1,25 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+
 import PropertyInfo from '../components/PropertyInfo'
 import CopyToClipboard from '../components/CopyToClipboard'
 import Contact from './Contact'
 
+import { useAppSelector } from '../app/hooks'
+import { ListingProps } from '../types'
+
 // Swiper imports
-import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation } from 'swiper/modules'
-import 'swiper/css'
-import 'swiper/css/navigation'
+import { Swiper, SwiperSlide } from 'swiper/react'
+// import 'swiper/css'
+// import 'swiper/css/navigation'
 
 export default function Listing() {
-  const [listing, setListing] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const [listing, setListing] = useState<ListingProps | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<boolean>(false)
 
-  const { currentUser } = useSelector((state) => state.user)
+  const { currentUser } = useAppSelector((state) => state.user)
   const params = useParams()
 
   useEffect(() => {
@@ -37,8 +40,8 @@ export default function Listing() {
         setLoading(false)
       } catch (error) {
         setError(true)
-        setLoading(false)
         console.log(error)
+        console.error('Error fetching listing:', error)
       }
     }
 
@@ -54,7 +57,6 @@ export default function Listing() {
           </p>
         </div>
       )}
-
       {error && (
         <div className="h-[calc(100vh-64px)] flex items-center justify-center">
           <p className="text-center my-7 text-2xl bg-white">
@@ -69,17 +71,17 @@ export default function Listing() {
             {listing.imageUrls.map((url) => (
               <SwiperSlide key={url}>
                 <div
-                  className="h-[550px]"
+                  className="h-[550px] relative"
                   style={{
                     background: `url(${url}) center no-repeat`,
                     backgroundSize: 'cover',
                   }}
-                ></div>
+                >
+                  <CopyToClipboard />
+                </div>
               </SwiperSlide>
             ))}
           </Swiper>
-
-          <CopyToClipboard />
 
           <div className="max-w-4xl mx-auto p-4 space-y-4 pb-14">
             <PropertyInfo listing={listing} />

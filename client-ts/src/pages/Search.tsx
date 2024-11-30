@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ListingItem from '../components/ListingItem'
+
 import { FaSearch } from 'react-icons/fa'
+import { ListingProps, SearchData } from '../types'
 
 export default function Search() {
-  const [searchData, setSearchData] = useState({
+  const [searchData, setSearchData] = useState<SearchData>({
     searchTerm: '',
     type: 'all',
     parking: false,
@@ -13,14 +15,14 @@ export default function Search() {
     sort: 'created_at',
     order: 'desc',
   })
-  const [loading, setLoading] = useState(false)
-  const [listings, setListings] = useState([])
-  const [showMore, setShowMore] = useState(false)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [listings, setListings] = useState<ListingProps[]>([])
+  const [showMore, setShowMore] = useState<boolean>(false)
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(location.search)
+    const urlParams = new URLSearchParams(window.location.search)
     const searchTermFromUrl = urlParams.get('searchTerm')
     const typeFromUrl = urlParams.get('type')
     const parkingFromUrl = urlParams.get('parking')
@@ -40,76 +42,78 @@ export default function Search() {
     ) {
       setSearchData({
         searchTerm: searchTermFromUrl || '',
-        type: typeFromUrl || 'all',
+        type: (typeFromUrl as 'all' | 'rent' | 'sale') || 'all',
         parking: parkingFromUrl === 'true' ? true : false,
         furnished: furnishedFromUrl === 'true' ? true : false,
         offer: offerFromUrl === 'true' ? true : false,
         sort: sortFromUrl || 'createdAt',
-        order: orderFromUrl || 'desc',
+        order: (orderFromUrl as 'asc' | 'desc') || 'desc',
       })
     }
 
     const fetchListings = async () => {
-      setLoading(true)
-      setShowMore(false)
-      const searchQuery = urlParams.toString()
-      const res = await fetch(`/api/listing/get?${searchQuery}`)
-      const data = await res.json()
-
-      if (data.length > 8) {
-        setShowMore(true)
-      } else {
+      try {
+        setLoading(true)
         setShowMore(false)
+        const searchQuery = urlParams.toString()
+        const res = await fetch(`/api/listing/get?${searchQuery}`)
+        const data = await res.json()
+
+        if (data.length > 8) {
+          setShowMore(true)
+        } else {
+          setShowMore(false)
+        }
+
+        setListings(data)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setLoading(false)
       }
-      setListings(data)
-      setLoading(false)
     }
 
     fetchListings()
-  }, [location.search])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [window.location.search])
 
-  const handleChange = (e) => {
-    if (e.target.id === 'searchTerm') {
-      setSearchData({ ...searchData, searchTerm: e.target.value })
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { id, value, checked } = e.target as HTMLInputElement
+
+    if (id === 'searchTerm') {
+      setSearchData({ ...searchData, searchTerm: value })
     }
 
-    if (
-      e.target.id === 'all' ||
-      e.target.id === 'rent' ||
-      e.target.id === 'sale'
-    ) {
-      setSearchData({ ...searchData, type: e.target.id })
+    if (id === 'all' || id === 'rent' || id === 'sale') {
+      setSearchData({ ...searchData, type: id })
     }
 
-    if (
-      e.target.id === 'parking' ||
-      e.target.id === 'furnished' ||
-      e.target.id === 'offer'
-    ) {
+    if (id === 'parking' || id === 'furnished' || id === 'offer') {
       setSearchData({
         ...searchData,
-        [e.target.id]:
-          e.target.checked || e.target.checked === 'true' ? true : false,
+        [id]: checked,
       })
     }
 
-    if (e.target.id === 'sort_order') {
-      const sort = e.target.value.split('_')[0] || 'created_at'
-      const order = e.target.value.split('_')[1] || 'desc'
+    if (id === 'sort_order') {
+      const sort = value.split('_')[0] || 'created_at'
+      const order = value.split('_')[1] || 'desc'
 
-      setSearchData({ ...searchData, sort, order })
+      setSearchData({ ...searchData, sort, order: order as 'asc' | 'desc' })
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
 
     const urlParams = new URLSearchParams()
     urlParams.set('searchTerm', searchData.searchTerm)
     urlParams.set('type', searchData.type)
-    urlParams.set('parking', searchData.parking)
-    urlParams.set('furnished', searchData.furnished)
-    urlParams.set('offer', searchData.offer)
+    urlParams.set('parking', String(searchData.parking))
+    urlParams.set('furnished', String(searchData.furnished))
+    urlParams.set('offer', String(searchData.offer))
     urlParams.set('sort', searchData.sort)
     urlParams.set('order', searchData.order)
 
@@ -120,8 +124,8 @@ export default function Search() {
   const handleShowMore = async () => {
     const numberOfListings = listings.length
     const startIndex = numberOfListings
-    const urlParams = new URLSearchParams(location.search)
-    urlParams.set('startIndex', startIndex)
+    const urlParams = new URLSearchParams(window.location.search)
+    urlParams.set('startIndex', String(startIndex))
     const searchQuery = urlParams.toString()
     const res = await fetch(`/api/listing/get?${searchQuery}`)
     const data = await res.json()

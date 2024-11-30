@@ -1,13 +1,21 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { MdDelete, MdModeEdit } from 'react-icons/md'
-import { ClockLoader } from 'react-spinners'
-import { GiNothingToSay } from 'react-icons/gi'
+import { useAppSelector } from '../app/hooks'
 
-const ListingCard = ({ listing, handleListingDelete }) => {
+import { ClockLoader } from 'react-spinners'
+import { MdDelete, MdModeEdit } from 'react-icons/md'
+import { GiNothingToSay } from 'react-icons/gi'
+import { ListingProps } from '../types'
+
+const ListingCard = ({
+  listing,
+  handleListingDelete,
+}: {
+  listing: ListingProps
+  handleListingDelete: (id: string) => Promise<void>
+}) => {
   return (
-    <div className="grid grid-cols-3 lg:grid-cols-4 justify-center items-center p-6 rounded-md shadow-lg transition duration-700 hover:scale-105">
+    <div className="grid grid-cols-3 lg:grid-cols-4 justify-center items-center p-6 rounded-md shadow-lg transition duration-700 hover:scale-[1.03]">
       <Link
         to={`/listing/${listing._id}`}
         className="flex items-center gap-2 hover:underline"
@@ -47,39 +55,42 @@ const ListingCard = ({ listing, handleListingDelete }) => {
 }
 
 export default function MyListing() {
-  const [loading, setLoading] = useState(false)
-  const [userListings, setUserListings] = useState([])
+  const [loading, setLoading] = useState<boolean>(false)
+  const [userListings, setUserListings] = useState<ListingProps[]>([])
 
-  const { currentUser } = useSelector((state) => state.user)
+  const { currentUser } = useAppSelector((state) => state.user)
 
   useEffect(() => {
     const fetchListings = async () => {
       setLoading(true)
+
       try {
         const res = await fetch(`/api/user/listings/${currentUser._id}`)
-        const data = await res.json()
+        const data: ListingProps[] = await res.json()
+
         setUserListings(data)
-        setLoading(false)
       } catch (error) {
         console.error(error)
+      } finally {
+        setLoading(false)
       }
     }
 
     fetchListings()
   }, [currentUser._id])
 
-  const handleListingDelete = async (listingId) => {
-    alert('Are you sure you want to delete this listing?')
+  const handleListingDelete = async (listingId: string): Promise<void> => {
+    if (!window.confirm('Are you sure you want to delete this listing?')) return
+
     try {
       const res = await fetch(`/api/listing/delete/${listingId}`, {
         method: 'DELETE',
       })
-      const data = await res.json()
+      await res.json()
 
       setUserListings((prevListing) =>
         prevListing.filter((listing) => listing._id !== listingId)
       )
-      console.log(data)
     } catch (error) {
       console.error(error)
     }

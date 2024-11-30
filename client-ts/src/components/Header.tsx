@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
 import { motion } from 'framer-motion'
 import { FaSearch } from 'react-icons/fa'
+
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import {
   signOutUserFailure,
   signOutUserStart,
@@ -10,12 +11,13 @@ import {
 } from '../app/features/user/userSlice'
 
 export default function Header() {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [showDropdown, SetShowDropdown] = useState(false)
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [showDropdown, SetShowDropdown] = useState<boolean>(false)
 
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const { currentUser } = useSelector((store) => store.user)
+
+  const dispatch = useAppDispatch()
+  const { currentUser } = useAppSelector((store) => store.user)
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
@@ -23,6 +25,7 @@ export default function Header() {
     if (searchTermFromUrl) {
       setSearchTerm(searchTermFromUrl)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search])
 
   const handleToggle = () => {
@@ -32,6 +35,7 @@ export default function Header() {
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart())
+
       const res = await fetch('/api/auth/signout')
       const data = await res.json()
       if (data.success === false) {
@@ -41,11 +45,16 @@ export default function Header() {
 
       dispatch(signOutUserSuccess(data))
     } catch (error) {
-      dispatch(signOutUserFailure(error.message))
+      if (error instanceof Error) {
+        dispatch(signOutUserFailure(error.message))
+      } else {
+        console.error('An unexpected error occurred during sign-out', error)
+        dispatch(signOutUserFailure('An unexpected error occurred'))
+      }
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const urlParams = new URLSearchParams(window.location.search)

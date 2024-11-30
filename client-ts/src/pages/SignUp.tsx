@@ -1,46 +1,49 @@
-import { useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+import { SignUpFormData } from '../types'
+
 import OAuth from '../components/OAuth'
 
 export default function SignUp() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SignUpFormData>({
     username: '',
     email: '',
     password: '',
   })
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const navigate = useNavigate()
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       [e.target.name]: e.target.value,
     }))
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
+    setIsLoading(true)
     try {
-      setIsLoading(true)
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
-
       const data = await res.json()
+
       if (data.success === false) {
         setIsLoading(false)
         toast.error('Email Id already exist')
         return
       }
+
       toast.success(data.message)
       navigate('/sign-in')
     } catch (error) {
-      toast.error(error)
+      toast.error(error as string)
     } finally {
       setIsLoading(false)
     }
@@ -63,7 +66,7 @@ export default function SignUp() {
               value={formData.username}
               onChange={handleChange}
               required
-              minLength="3"
+              minLength={3}
             />
             <input
               type="email"
@@ -82,8 +85,8 @@ export default function SignUp() {
               value={formData.password}
               onChange={handleChange}
               required
-              minLength="8"
-              maxLength="20"
+              minLength={8}
+              maxLength={20}
             />
             <button
               disabled={isLoading}

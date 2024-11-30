@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom'
 import { MdLocationOn } from 'react-icons/md'
 import { FaBath, FaBed } from 'react-icons/fa'
-
-import { ListingProps } from './home/FeaturedProperty'
+import { ListingProps } from '../types'
 
 export default function ListingItem({ listing }: { listing: ListingProps }) {
   return (

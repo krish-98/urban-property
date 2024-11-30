@@ -1,31 +1,34 @@
-import { useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'sonner'
+import { SignInFormData } from '../types'
+import OAuth from '../components/OAuth'
+
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import {
   signInFailure,
-  signInStart,
   signInSuccess,
+  signInStart,
 } from '../app/features/user/userSlice'
-import OAuth from '../components/OAuth'
-import { toast } from 'sonner'
 
 export default function SignIn() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SignInFormData>({
     email: '',
     password: '',
   })
-  const dispatch = useDispatch()
-  const { loading, error } = useSelector((store) => store.user)
   const navigate = useNavigate()
 
-  const handleChange = (e) => {
+  const dispatch = useAppDispatch()
+  const { loading } = useAppSelector((store) => store.user)
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       [e.target.name]: e.target.value,
     }))
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     try {
@@ -48,9 +51,14 @@ export default function SignIn() {
       toast.success(`Welcome, ${data?.username}`, {
         position: 'bottom-right',
       })
-    } catch (error) {
-      dispatch(signInFailure(error.message))
-      toast.error(error)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        dispatch(signInFailure(error.message))
+        toast.error(error.message)
+      } else {
+        dispatch(signInFailure('An unknown error occurred'))
+        toast.error('An unknown error occurred')
+      }
     }
   }
 

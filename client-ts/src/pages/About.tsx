@@ -1,10 +1,9 @@
-import { AiOutlineDollar } from 'react-icons/ai'
-import { CiSearch } from 'react-icons/ci'
-import { FaEye, FaFireAlt } from 'react-icons/fa'
-import { FaHouseChimneyWindow, FaMapLocationDot } from 'react-icons/fa6'
-import { PiMaskHappy } from 'react-icons/pi'
-import { RiEmotionHappyLine } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
+
+import { AiOutlineDollar } from 'react-icons/ai'
+import { FaFireAlt } from 'react-icons/fa'
+import { FaMapLocationDot } from 'react-icons/fa6'
+import { PiMaskHappy } from 'react-icons/pi'
 
 export default function About() {
   return (

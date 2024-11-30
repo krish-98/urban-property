@@ -9,7 +9,7 @@ import { ClipLoader } from 'react-spinners'
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth'
 import { app } from '../utils/firebase.ts'
 
-export default function OAuth({ title }) {
+export default function OAuth({ title }: { title: string }) {
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -37,8 +37,13 @@ export default function OAuth({ title }) {
       navigate('/')
       toast.success(`Welcome, ${data.username}`, { position: 'top-right' })
     } catch (error) {
-      toast.warning(`${error.message}`)
-      console.error('Could not sign in with google', error)
+      if (error instanceof Error) {
+        toast.warning(`${error.message}`)
+        console.error('Could not sign in with Google', error)
+      } else {
+        toast.warning('An unknown error occurred')
+        console.error('Could not sign in with Google', error)
+      }
     } finally {
       setLoading(false)
     }

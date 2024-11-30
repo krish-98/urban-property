@@ -1,3 +1,4 @@
+import { ListingProps } from '../types'
 import {
   FaBath,
   FaBed,
@@ -6,13 +7,13 @@ import {
   FaParking,
 } from 'react-icons/fa'
 
-export default function PropertyInfo({ listing }) {
+export default function PropertyInfo({ listing }: { listing: ListingProps }) {
   return (
     <div className="flex flex-col my-7 gap-6 px-6 py-8 border rounded-md md:px-10">
       <p className="text-2xl font-semibold">
         {listing.name} - ${' '}
         {listing.offer
-          ? listing.discountPrice.toLocaleString('en-US')
+          ? listing?.discountPrice?.toLocaleString('en-US')
           : listing.regularPrice.toLocaleString('en-US')}
         {listing.type === 'rent' && '/month'}
       </p>
@@ -29,7 +30,7 @@ export default function PropertyInfo({ listing }) {
 
         {listing.offer && (
           <p className="bg-red-500 w-full max-w-[200px] text-white text-center p-2 rounded-md">
-            ${+listing.regularPrice - +listing.discountPrice} OFF
+            ${Number(listing.regularPrice) - Number(listing.discountPrice)} OFF
           </p>
         )}
       </div>

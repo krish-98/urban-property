@@ -2,32 +2,13 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CircleLoader } from 'react-spinners'
 import ListingItem from '../ListingItem'
-
-export interface ListingProps {
-  _id: string
-  imageUrls: string[]
-  name: string
-  description: string
-  address: string
-  type: 'rent' | 'sale'
-  bedrooms: number
-  bathrooms: number
-  regularPrice: number
-  discountPrice?: number
-  offer: boolean
-  parking: boolean
-  furnished: boolean
-  userRef: string
-  createdAt: string
-  updatedAt: string
-  // __v: number
-}
+import { ListingProps } from '../../types'
 
 export default function FeaturedProperty() {
-  const [loading, setLoading] = useState(false)
-  const [offerListings, setOfferListings] = useState([])
-  const [saleListings, setSaleListings] = useState([])
-  const [rentListings, setRentListings] = useState([])
+  const [loading, setLoading] = useState<boolean>(false)
+  const [offerListings, setOfferListings] = useState<ListingProps[]>([])
+  const [saleListings, setSaleListings] = useState<ListingProps[]>([])
+  const [rentListings, setRentListings] = useState<ListingProps[]>([])
 
   useEffect(() => {
     const fetchOfferListings = async () => {
@@ -37,7 +18,7 @@ export default function FeaturedProperty() {
 
         if (!res.ok) throw new Error('Network error occured!')
 
-        const data = await res.json()
+        const data: ListingProps[] = await res.json()
         setOfferListings(data)
 
         fetchRentListings()
@@ -53,7 +34,7 @@ export default function FeaturedProperty() {
 
         if (!res.ok) throw new Error('Network error occured!')
 
-        const data = await res.json()
+        const data: ListingProps[] = await res.json()
         setRentListings(data)
 
         fetchSaleListings()
@@ -69,7 +50,7 @@ export default function FeaturedProperty() {
 
         if (!res.ok) throw new Error('Network error occured!')
 
-        const data = await res.json()
+        const data: ListingProps[] = await res.json()
         setSaleListings(data)
         setLoading(false)
       } catch (error) {
