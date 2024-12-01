@@ -4,7 +4,7 @@ import {
   signup,
   googleAuth,
   signOut,
-} from '../controllers/authController.js'
+} from '../controllers/authController'
 
 const router = express.Router()
 

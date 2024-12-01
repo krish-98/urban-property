@@ -1,6 +1,24 @@
 import { model, Schema } from 'mongoose'
 
-const listingSchema = new Schema(
+export interface IListing extends Document {
+  imageUrls: string[]
+  name: string
+  description: string
+  address: string
+  type: string
+  bedrooms: number
+  bathrooms: number
+  regularPrice: number
+  discountPrice: number
+  offer: boolean
+  parking: boolean
+  furnished: boolean
+  userRef: Schema.Types.ObjectId
+  createdAt: Date
+  updatedAt: Date
+}
+
+const listingSchema = new Schema<IListing>(
   {
     imageUrls: {
       type: [String],
@@ -59,6 +77,6 @@ const listingSchema = new Schema(
   { timestamps: true }
 )
 
-const Listing = model('Listing', listingSchema)
+const Listing = model<IListing>('Listing', listingSchema)
 
 export default Listing

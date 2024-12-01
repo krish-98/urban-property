@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import express from 'express'
 import {
   createListing,
@@ -5,8 +7,8 @@ import {
   getListing,
   getListings,
   updateListing,
-} from '../controllers/listingController.js'
-import { verifyToken } from '../middlewares/verifyUser.js'
+} from '../controllers/listingController'
+import { verifyToken } from '../middlewares/verifyUser'
 
 const router = express.Router()
 

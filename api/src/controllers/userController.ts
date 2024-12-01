@@ -1,10 +1,25 @@
-import bcrypt from 'bcrypt'
-import User from '../models/User.js'
-import { errorHandler } from '../utils/error.js'
-import Listing from '../models/Listing.js'
+// @ts-nocheck
 
-export const updateUser = async (req, res, next) => {
-  if (req.user.id !== req.params.id)
+import { NextFunction, Request, Response } from 'express'
+import bcrypt from 'bcrypt'
+import User from '../models/User'
+import Listing from '../models/Listing'
+import { errorHandler } from '../utils/error'
+
+// Custom Request type to include `user`
+interface CustomRequest extends Request {
+  user?: {
+    id: string
+    // Add other properties in your JWT payload if necessary
+  }
+}
+
+export const updateUser = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.user?.id !== req.params.id)
     return next(errorHandler(401, 'You can only update your own account!'))
 
   try {
@@ -33,8 +48,12 @@ export const updateUser = async (req, res, next) => {
   }
 }
 
-export const deleteUser = async (req, res, next) => {
-  if (req.user.id !== req.params.id)
+export const deleteUser = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.user?.id !== req.params.id)
     return next(errorHandler(401, 'You can only delete your own account!'))
 
   try {
@@ -46,8 +65,12 @@ export const deleteUser = async (req, res, next) => {
   }
 }
 
-export const getUserListings = async (req, res, next) => {
-  if (req.user.id === req.params.id) {
+export const getUserListings = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.user?.id === req.params.id) {
     try {
       const listings = await Listing.find({ userRef: req.params.id })
       res.status(200).json(listings)
@@ -59,7 +82,11 @@ export const getUserListings = async (req, res, next) => {
   }
 }
 
-export const getUser = async (req, res, next) => {
+export const getUser = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = await User.findById(req.params.id)
 

@@ -4,8 +4,8 @@ import {
   deleteUser,
   getUser,
   getUserListings,
-} from '../controllers/userController.js'
-import { verifyToken } from '../middlewares/verifyUser.js'
+} from '../controllers/userController'
+import { verifyToken } from '../middlewares/verifyUser'
 
 const router = express.Router()
 

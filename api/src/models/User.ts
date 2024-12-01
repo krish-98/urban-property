@@ -1,6 +1,15 @@
 import { model, Schema } from 'mongoose'
 
-const userSchema = new Schema(
+export interface IUser extends Document {
+  email: string
+  username: string
+  password: string
+  avatar?: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+const userSchema = new Schema<IUser>(
   {
     email: {
       type: String,
@@ -36,6 +45,6 @@ userSchema.pre('save', function (next) {
   next()
 })
 
-const User = model('User', userSchema)
+const User = model<IUser>('User', userSchema)
 
 export default User

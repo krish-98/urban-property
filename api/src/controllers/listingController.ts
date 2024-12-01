@@ -1,7 +1,21 @@
-import Listing from '../models/Listing.js'
-import { errorHandler } from '../utils/error.js'
+// @ts-nocheck
 
-export const createListing = async (req, res, next) => {
+import { NextFunction, Request, Response } from 'express'
+import Listing from '../models/Listing'
+import { errorHandler } from '../utils/error'
+
+// Custom Request type to include `user`
+interface CustomRequest extends Request {
+  user?: {
+    id: string
+  }
+}
+
+export const createListing = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const listing = await Listing.create(req.body)
 
@@ -11,14 +25,18 @@ export const createListing = async (req, res, next) => {
   }
 }
 
-export const deleteListing = async (req, res, next) => {
+export const deleteListing = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
   const listing = await Listing.findById(req.params.id)
 
   if (!listing) {
     return next(errorHandler(404, 'Lising not found'))
   }
 
-  if (req.user.id !== listing.userRef) {
+  if (req.user?.id !== listing.userRef) {
     return next(errorHandler(401, 'You can only delete your own listing'))
   }
 
@@ -30,14 +48,18 @@ export const deleteListing = async (req, res, next) => {
   }
 }
 
-export const updateListing = async (req, res, next) => {
+export const updateListing = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
   const listing = await Listing.findById(req.params.id)
 
   if (!listing) {
     return next(errorHandler(401, 'Listing not found!'))
   }
 
-  if (req.user.id !== listing.userRef) {
+  if (req.user?.id !== listing.userRef) {
     return next(errorHandler(401, 'You can only update your own listings!'))
   }
 
@@ -53,7 +75,11 @@ export const updateListing = async (req, res, next) => {
   }
 }
 
-export const getListing = async (req, res, next) => {
+export const getListing = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const listing = await Listing.findById(req.params.id).populate(
       'userRef',
@@ -70,10 +96,14 @@ export const getListing = async (req, res, next) => {
   }
 }
 
-export const getListings = async (req, res, next) => {
+export const getListings = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const limit = parseInt(req.query.limit) || 9
-    const startIndex = parseInt(req.query.startIndex) || 0
+    const limit = parseInt(req.query.limit as string) || 9
+    const startIndex = parseInt(req.query.startIndex as string) || 0
 
     let offer = req.query.offer
     if (offer === undefined || offer === 'false') {

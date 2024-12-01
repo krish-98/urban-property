@@ -1,9 +1,15 @@
-import { errorHandler } from '../utils/error.js'
-import User from '../models/User.js'
+import { NextFunction, Request, Response } from 'express'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
-export const signup = async (req, res, next) => {
+import User from '../models/User'
+import { errorHandler } from '../utils/error'
+
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { email, username, password } = req.body
     if (!email || !username || !password) {
@@ -18,7 +24,7 @@ export const signup = async (req, res, next) => {
     })
 
     if (!newUser) {
-      return res.status(403).json({ message: 'User not added' })
+      return next(errorHandler(403, 'User not added'))
     }
 
     res.status(201).json({ message: 'User created successfully' })
@@ -27,7 +33,11 @@ export const signup = async (req, res, next) => {
   }
 }
 
-export const signin = async (req, res, next) => {
+export const signin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { email, password } = req.body
 
@@ -46,9 +56,13 @@ export const signin = async (req, res, next) => {
     }
 
     // Destructing the object to avoid sending the password to the client
+    // @ts-ignore
     const { password: pass, ...rest } = validUser._doc
 
-    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET)
+    const token = jwt.sign(
+      { id: validUser._id },
+      process.env.JWT_SECRET as string
+    )
     res
       .cookie('token', token, {
         maxAge: 24 * 60 * 60 * 1000,
@@ -60,12 +74,17 @@ export const signin = async (req, res, next) => {
   }
 }
 
-export const googleAuth = async (req, res, next) => {
+export const googleAuth = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = await User.findOne({ email: req.body.email })
 
     if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string)
+      //@ts-ignore
       const { password, ...rest } = user._doc
 
       res
@@ -86,9 +105,13 @@ export const googleAuth = async (req, res, next) => {
         password: hashedPassword,
         avatar: req.body.photo,
       })
+      //@ts-ignore
       const { password, ...rest } = newUser._doc
 
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET)
+      const token = jwt.sign(
+        { id: newUser._id },
+        process.env.JWT_SECRET as string
+      )
 
       res
         .cookie('token', token, {
@@ -102,7 +125,11 @@ export const googleAuth = async (req, res, next) => {
   }
 }
 
-export const signOut = async (req, res, next) => {
+export const signOut = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     res.clearCookie('token')
     res.status(200).json({ message: 'User has been logged out' })
