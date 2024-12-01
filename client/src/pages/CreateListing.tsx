@@ -97,7 +97,6 @@ export default function CreateListing() {
           if (progress > 0 && progress < 100) {
             setImageUploadProgress(`Upload is ${progress}% done`)
           }
-          console.log(progress)
           setImageUploadProgress('')
         },
         (error) => reject(error),

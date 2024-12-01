@@ -14,7 +14,11 @@ export default function FeaturedProperty() {
     const fetchOfferListings = async () => {
       try {
         setLoading(true)
-        const res = await fetch('/api/listing/get?offer=true&limit=3')
+        const res = await fetch(
+          `${
+            import.meta.env.VITE_APP_BACKEND_URL
+          }/api/listing/get?offer=true&limit=3`
+        )
 
         if (!res.ok) throw new Error('Network error occured!')
 
@@ -30,7 +34,11 @@ export default function FeaturedProperty() {
 
     const fetchRentListings = async () => {
       try {
-        const res = await fetch('/api/listing/get?type=rent&limit=3')
+        const res = await fetch(
+          `${
+            import.meta.env.VITE_APP_BACKEND_URL
+          }/api/listing/get?type=rent&limit=3`
+        )
 
         if (!res.ok) throw new Error('Network error occured!')
 
@@ -46,7 +54,11 @@ export default function FeaturedProperty() {
 
     const fetchSaleListings = async () => {
       try {
-        const res = await fetch('/api/listing/get?type=sale&limit=3')
+        const res = await fetch(
+          `${
+            import.meta.env.VITE_APP_BACKEND_URL
+          }/api/listing/get?type=sale&limit=3`
+        )
 
         if (!res.ok) throw new Error('Network error occured!')
 
