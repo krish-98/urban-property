@@ -18,5 +18,3 @@ export default function CopyToClipboard() {
     </div>
   )
 }
-
-//top-24 right-4 xl:right-[10%]

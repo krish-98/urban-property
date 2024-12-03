@@ -41,7 +41,9 @@ export default function UpdateListing() {
   useEffect(() => {
     const fetchListing = async () => {
       const listingId = params.listingId
-      const res = await fetch(`/api/listing/get/${listingId}`)
+      const res = await fetch(
+        `${import.meta.env.VITE_APP_BACKEND_URL}/api/listing/get/${listingId}`
+      )
       const data = await res.json()
 
       if (data.success === false) {
@@ -158,13 +160,18 @@ export default function UpdateListing() {
       setLoading(true)
       setError('')
 
-      const res = await fetch(`/api/listing/update/${params.listingId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ...formData, userRef: currentUser._id }),
-      })
+      const res = await fetch(
+        `${import.meta.env.VITE_APP_BACKEND_URL}/api/listing/update/${
+          params.listingId
+        }`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...formData, userRef: currentUser._id }),
+        }
+      )
       const data = await res.json()
 
       setLoading(false)

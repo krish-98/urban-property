@@ -122,13 +122,18 @@ export default function Profile() {
     try {
       dispatch(updateUserStart())
 
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
+      const res = await fetch(
+        `${import.meta.env.VITE_APP_BACKEND_URL}/api/user/update/${
+          currentUser._id
+        }`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        }
+      )
       const data = await res.json()
 
       if (data.success === false) {
@@ -159,9 +164,14 @@ export default function Profile() {
     try {
       if (confirmDialog) {
         dispatch(deleteUserSuccess())
-        const res = await fetch(`/api/user/delete/${currentUser._id}`, {
-          method: 'DELETE',
-        })
+        const res = await fetch(
+          `${import.meta.env.VITE_APP_BACKEND_URL}/api/user/delete/${
+            currentUser._id
+          }`,
+          {
+            method: 'DELETE',
+          }
+        )
         const data = await res.json()
         if (data.success === false) {
           dispatch(deleteUserFailure(data.message))

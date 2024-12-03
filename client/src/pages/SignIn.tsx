@@ -33,11 +33,14 @@ export default function SignIn() {
 
     try {
       dispatch(signInStart())
-      const response = await fetch('/api/auth/signin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_BACKEND_URL}/api/auth/signin`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        }
+      )
       const data = await response.json()
 
       if (data.success === false) {
