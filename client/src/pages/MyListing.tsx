@@ -65,7 +65,7 @@ export default function MyListing() {
       setLoading(true)
 
       try {
-        const res = await fetch(`/api/user/listings/${currentUser._id}`, {
+        const res = await fetch(`/api/user/listings/${currentUser?._id}`, {
           credentials: 'include',
         })
         const data: ListingProps[] = await res.json()
