@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/controllers/authcontroller.ts","./src/controllers/listingcontroller.ts","./src/controllers/usercontroller.ts","./src/middlewares/verifyuser.ts","./src/models/listing.ts","./src/models/user.ts","./src/routes/authroutes.ts","./src/routes/listingroutes.ts","./src/routes/userroutes.ts","./src/utils/error.ts"],"version":"5.7.2"}
