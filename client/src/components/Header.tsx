@@ -37,7 +37,10 @@ export default function Header() {
       dispatch(signOutUserStart())
 
       const res = await fetch(
-        `${import.meta.env.VITE_APP_BACKEND_URL}/api/auth/signout`
+        `${import.meta.env.VITE_APP_BACKEND_URL}/api/auth/signout`,
+        {
+          credentials: 'include',
+        }
       )
       const data = await res.json()
       if (data.success === false) {

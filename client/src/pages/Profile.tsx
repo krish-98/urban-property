@@ -132,6 +132,7 @@ export default function Profile() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(formData),
+          credentials: 'include',
         }
       )
       const data = await res.json()
@@ -170,6 +171,7 @@ export default function Profile() {
           }`,
           {
             method: 'DELETE',
+            credentials: 'include',
           }
         )
         const data = await res.json()

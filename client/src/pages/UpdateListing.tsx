@@ -42,7 +42,10 @@ export default function UpdateListing() {
     const fetchListing = async () => {
       const listingId = params.listingId
       const res = await fetch(
-        `${import.meta.env.VITE_APP_BACKEND_URL}/api/listing/get/${listingId}`
+        `${import.meta.env.VITE_APP_BACKEND_URL}/api/listing/get/${listingId}`,
+        {
+          credentials: 'include',
+        }
       )
       const data = await res.json()
 
@@ -170,6 +173,7 @@ export default function UpdateListing() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ ...formData, userRef: currentUser._id }),
+          credentials: 'include',
         }
       )
       const data = await res.json()

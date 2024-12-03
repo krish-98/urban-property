@@ -65,7 +65,9 @@ export default function MyListing() {
       setLoading(true)
 
       try {
-        const res = await fetch(`/api/user/listings/${currentUser._id}`)
+        const res = await fetch(`/api/user/listings/${currentUser._id}`, {
+          credentials: 'include',
+        })
         const data: ListingProps[] = await res.json()
 
         setUserListings(data)
@@ -85,6 +87,7 @@ export default function MyListing() {
     try {
       const res = await fetch(`/api/listing/delete/${listingId}`, {
         method: 'DELETE',
+        credentials: 'include',
       })
       await res.json()
 

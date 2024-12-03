@@ -32,6 +32,7 @@ export default function OAuth({ title }: { title: string }) {
             email: result?.user?.email,
             photo: result?.user?.photoURL,
           }),
+          credentials: 'include',
         }
       )
 
