@@ -1,8 +1,8 @@
 import express, { Express, NextFunction, Request, Response } from 'express'
-import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import dotenv from 'dotenv'
 
 import authRouter from './routes/authRoutes'
 import userRouter from './routes/userRoutes'
@@ -16,6 +16,7 @@ const PORT: number = Number(process.env.PORT) || 3000
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
+    credentials: true,
   })
 )
 app.use(express.json())

@@ -66,6 +66,8 @@ export const signin = async (
     res
       .cookie('token', token, {
         maxAge: 24 * 60 * 60 * 1000,
+        secure: true,
+        sameSite: 'none',
       })
       .status(200)
       .json(rest)
@@ -116,6 +118,8 @@ export const googleAuth = async (
       res
         .cookie('token', token, {
           maxAge: 24 * 60 * 60 * 1000,
+          secure: true,
+          sameSite: 'none',
         })
         .status(200)
         .json(rest)
@@ -131,7 +135,7 @@ export const signOut = async (
   next: NextFunction
 ) => {
   try {
-    res.clearCookie('token')
+    res.clearCookie('token', { secure: true, sameSite: 'none' })
     res.status(200).json({ message: 'User has been logged out' })
   } catch (error) {
     next(error)
