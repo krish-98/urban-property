@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import SuspenseLoader from './fallback-ui/SuspenseLoader'
+import SuspenseLoader from './loaders/SuspenseLoader'
 
 export default function SuspenseWrapper({
   component,

@@ -11,6 +11,7 @@ import { app } from '../utils/firebase.ts'
 
 export default function OAuth({ title }: { title: string }) {
   const [loading, setLoading] = useState(false)
+
   const dispatch = useDispatch()
   const navigate = useNavigate()
 

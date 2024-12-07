@@ -32,6 +32,16 @@ export default function Header() {
     SetShowDropdown((prevDropdown) => !prevDropdown)
   }
 
+  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const urlParams = new URLSearchParams(window.location.search)
+    urlParams.set('searchTerm', searchTerm)
+
+    const searchQuery = urlParams.toString()
+    navigate(`/search?${searchQuery}`)
+  }
+
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart())
@@ -43,6 +53,7 @@ export default function Header() {
         }
       )
       const data = await res.json()
+
       if (data.success === false) {
         dispatch(signOutUserFailure(data.message))
         return
@@ -59,33 +70,24 @@ export default function Header() {
     }
   }
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    const urlParams = new URLSearchParams(window.location.search)
-    urlParams.set('searchTerm', searchTerm)
-    const searchQuery = urlParams.toString()
-    navigate(`/search?${searchQuery}`)
-  }
-
   return (
     <header className="bg-white shadow-md px-4 py-4">
       <nav className="flex justify-between items-center max-w-6xl mx-auto relative">
         <Link to="/">
           <h1 className="font-bold flex flex-wrap space-x-0.5 sm:text-xl lg:text-3xl">
-            <span className="text-[#fb923c]">Urban</span>
-            <span className="text-[#191919]">Property</span>
+            <span className="text-ubOrange">Urban</span>
+            <span className="text-ubBlack">Property</span>
           </h1>
         </Link>
 
         <form
-          onSubmit={handleSubmit}
-          className="ring-mainColor ring-2 p-1.5 md:p-3 rounded-lg flex items-center gap-1.5"
+          onSubmit={handleSearch}
+          className="p-1.5 md:p-3 flex items-center gap-1.5 rounded-lg ring-2 ring-mainColor hover:ring-1 hover:ring-ubOrange"
         >
           <input
             type="text"
-            placeholder="Search"
-            className="bg-transparent focus:outline-none pl-1 w-24 sm:w-64 font-medium placeholder:font-medium"
+            placeholder="Search Properties"
+            className="bg-transparent pl-1 w-24 sm:w-64 font-medium placeholder:font-medium placeholder:text-sm outline-none"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />

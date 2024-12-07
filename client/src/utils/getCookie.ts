@@ -1,5 +1,6 @@
 export const getCookie = () => {
   const cookies = document.cookie.split('; ')
+
   let token
 
   for (const cookie of cookies) {

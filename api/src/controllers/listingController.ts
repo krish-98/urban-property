@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 import { NextFunction, Request, Response } from 'express'
 import Listing from '../models/Listing'
 import { errorHandler } from '../utils/error'
@@ -130,7 +129,7 @@ export const getListings = async (
     const order = req.query.order || 'desc'
 
     const listings = await Listing.find({
-      name: { $regex: searchTerm, $options: 'i' }, //regex => show wherther somepart the words are present in the search term, options => don't care about the uppercase or lowercase in the search
+      name: { $regex: searchTerm, $options: 'i' }, //regex => shows whether some part of the words are present in the search term, options => don't care about the uppercase or lowercase in the search
       offer,
       furnished,
       parking,

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CircleLoader } from 'react-spinners'
+
 import ListingItem from '../ListingItem'
 import { ListingProps } from '../../types'
 
@@ -14,6 +15,7 @@ export default function FeaturedProperty() {
     const fetchOfferListings = async () => {
       try {
         setLoading(true)
+
         const res = await fetch(
           `${
             import.meta.env.VITE_APP_BACKEND_URL
@@ -27,7 +29,8 @@ export default function FeaturedProperty() {
 
         fetchRentListings()
       } catch (error) {
-        console.log(error)
+        console.error(error)
+      } finally {
         setLoading(false)
       }
     }
@@ -47,7 +50,8 @@ export default function FeaturedProperty() {
 
         fetchSaleListings()
       } catch (error) {
-        console.log(error)
+        console.error(error)
+      } finally {
         setLoading(false)
       }
     }
@@ -66,7 +70,8 @@ export default function FeaturedProperty() {
         setSaleListings(data)
         setLoading(false)
       } catch (error) {
-        console.log(error)
+        console.error(error)
+      } finally {
         setLoading(false)
       }
     }

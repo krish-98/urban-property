@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import User from '../models/User'
 import { errorHandler } from '../utils/error'
 
-export const signup = async (
+export const signUp = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -33,7 +33,7 @@ export const signup = async (
   }
 }
 
-export const signin = async (
+export const signIn = async (
   req: Request,
   res: Response,
   next: NextFunction

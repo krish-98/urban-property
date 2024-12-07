@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 import { useAppDispatch, useAppSelector } from './app/hooks'
 import { signOutUserSuccess } from './app/features/user/userSlice'
-
 import { getCookie } from './utils/getCookie'
 
 import Header from './components/Header'

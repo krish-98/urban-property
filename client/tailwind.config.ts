@@ -6,6 +6,7 @@ export default {
       colors: {
         mainColor: '#fff7f2',
         ubOrange: '#fb923c',
+        ubBlack: '#191919',
       },
     },
   },

@@ -1,17 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { User } from 'firebase/auth'
-
-// interface User {
-//   id: string
-//   username: string
-//   email: string
-// }
-
-// interface InitialState {
-//   currentUser: User | null
-//   loading: boolean
-//   error: string | null
-// }
 
 interface User {
   _id: string
