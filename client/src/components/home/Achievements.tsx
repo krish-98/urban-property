@@ -11,7 +11,7 @@ export default function Achievements() {
   return (
     <section>
       <div className="bg-[#fffaf7]">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8 md:px-8 lg:gap-16 py-14 xl:justify-between">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8 md:px-8 lg:gap-16 py-14 xl:justify-between xl:px-0">
           <div className="space-y-1 w-[200px] h-[150px]">
             <AiOutlineDollar size={25} className="fill-[#fc670f]" />
             <p className="font-semibold text-lg md:text-xl lg:text-2xl">5.4M</p>
@@ -43,7 +43,7 @@ export default function Achievements() {
       </div>
 
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 my-10 md:my-16">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 py-10 md:py-16">
           <div className="bg-[#ffe0ce] text-black py-16 pl-8 pr-16 rounded-xl space-y-4 lg:space-y-7 md:py-24">
             <h1 className="font-semibold text-xl lg:text-3xl">
               <span>Simple & easy way to find</span>
