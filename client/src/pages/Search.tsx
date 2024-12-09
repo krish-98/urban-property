@@ -23,6 +23,7 @@ export default function Search() {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
+
     const searchTermFromUrl = urlParams.get('searchTerm')
     const typeFromUrl = urlParams.get('type')
     const parkingFromUrl = urlParams.get('parking')
@@ -55,6 +56,7 @@ export default function Search() {
       try {
         setLoading(true)
         setShowMore(false)
+
         const searchQuery = urlParams.toString()
         const res = await fetch(
           `${
@@ -87,25 +89,33 @@ export default function Search() {
     const { id, value, checked } = e.target as HTMLInputElement
 
     if (id === 'searchTerm') {
-      setSearchData({ ...searchData, searchTerm: value })
+      setSearchData((prevSearchData) => ({
+        ...prevSearchData,
+        searchTerm: value,
+      }))
     }
 
     if (id === 'all' || id === 'rent' || id === 'sale') {
-      setSearchData({ ...searchData, type: id })
+      setSearchData((prevSearchData) => ({ ...prevSearchData, type: id }))
     }
 
     if (id === 'parking' || id === 'furnished' || id === 'offer') {
-      setSearchData({
-        ...searchData,
-        [id]: checked,
-      })
+      setSearchData((prevSearchData) => ({ ...prevSearchData, [id]: checked }))
     }
 
     if (id === 'sort_order') {
       const sort = value.split('_')[0] || 'created_at'
       const order = value.split('_')[1] || 'desc'
 
-      setSearchData({ ...searchData, sort, order: order as 'asc' | 'desc' })
+      console.log(value)
+      console.log(sort)
+      console.log(order)
+
+      setSearchData((prevSearchData) => ({
+        ...prevSearchData,
+        sort,
+        order: order as 'asc' | 'desc',
+      }))
     }
   }
 
@@ -144,130 +154,126 @@ export default function Search() {
   }
 
   return (
-    <div className="bg-[#fffaf7]">
-      <div className="max-w-6xl mx-auto p-4">
-        <div>
-          <h2 className="font-semibold my-4 md:text-xl lg:text-2xl">
-            Find Property
-          </h2>
+    <div className="bg-mainColor">
+      <div className="max-w-6xl mx-auto px-4 pt-6 xl:px-0">
+        <h2 className="font-semibold py-4 md:text-xl lg:text-2xl">
+          Find Property
+        </h2>
 
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-8 text-sm lg:text-base"
-          >
-            {/* Search field */}
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                id="searchTerm"
-                placeholder="Search..."
-                className="border rounded-lg p-3 w-full"
-                value={searchData.searchTerm}
-                onChange={handleChange}
-              />
-            </div>
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-8 text-sm lg:text-base"
+        >
+          <input
+            type="text"
+            id="searchTerm"
+            placeholder="Search..."
+            className="border rounded-lg p-3 pl-4"
+            value={searchData.searchTerm}
+            onChange={handleChange}
+          />
 
-            <div className="flex flex-wrap gap-6 md:justify-center">
-              {/* Type */}
-              <div className="flex gap-3 flex-wrap items-center">
-                <label className="font-semibold">Type:</label>
-
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    id="all"
-                    className="w-5 accent-[#fb923c]"
-                    checked={searchData.type === 'all'}
-                    onChange={handleChange}
-                  />
-                  <span className="text-gray-700">Rent & Sale</span>
-                </div>
-
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    id="rent"
-                    className="w-5 accent-[#fb923c]"
-                    checked={searchData.type === 'rent'}
-                    onChange={handleChange}
-                  />
-                  <span className="text-gray-700">Rent </span>
-                </div>
-
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    id="sale"
-                    className="w-5 accent-[#fb923c]"
-                    checked={searchData.type === 'sale'}
-                    onChange={handleChange}
-                  />
-                  <span className="text-gray-700">Sale</span>
-                </div>
-
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    id="offer"
-                    className="w-5 accent-[#fb923c]"
-                    checked={searchData.offer}
-                    onChange={handleChange}
-                  />
-                  <span className="text-gray-700">Offer</span>
-                </div>
-              </div>
-
-              {/* Amenities */}
-              <div className="flex gap-2 flex-wrap items-center">
-                <label className="font-semibold">Amenities:</label>
-
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    id="parking"
-                    className="w-5 accent-[#fb923c]"
-                    checked={searchData.parking}
-                    onChange={handleChange}
-                  />
-                  <span className="text-gray-700">Parking</span>
-                </div>
-
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    id="furnished"
-                    className="w-5 accent-[#fb923c]"
-                    checked={searchData.furnished}
-                    onChange={handleChange}
-                  />
-                  <span className="text-gray-700">Furnished</span>
-                </div>
-              </div>
-
-              {/* Sort */}
-              <div className="flex items-center gap-2">
-                <label className="font-semibold">Sort:</label>
-
-                <select
+          <div className="flex flex-wrap gap-6 justify-evenly">
+            {/* Types */}
+            <div className="flex gap-3 flex-wrap items-center">
+              <p className="font-semibold">Type:</p>
+              <div className="flex gap-1.5">
+                <input
+                  type="checkbox"
+                  id="all"
+                  className="w-4 accent-ubOrange"
+                  checked={searchData.type === 'all'}
                   onChange={handleChange}
-                  defaultValue={'created_at_desc'}
-                  id="sort_order"
-                  className="border rounded-lg p-3"
-                >
-                  <option value="regularPrice_desc">Price high to low</option>
-                  <option value="regularPrice_asc">Price low to high</option>
-                  <option value="createdAt_desc">Latest</option>
-                  <option value="createdAt_asc">Oldest</option>
-                </select>
+                />
+                <label className="text-gray-700">Rent & Sale</label>
               </div>
 
-              <button className="flex items-center justify-center gap-1 bg-black font-semibold tracking-wider text-white p-3 rounded-lg hover:opacity-95">
-                <span>Search</span>
-                <FaSearch className="w-4 h-4" />
-              </button>
+              <div className="flex gap-1.5">
+                <input
+                  type="checkbox"
+                  id="rent"
+                  className="w-4 accent-ubOrange"
+                  checked={searchData.type === 'rent'}
+                  onChange={handleChange}
+                />
+                <label className="text-gray-700">Rent </label>
+              </div>
+
+              <div className="flex gap-1.5">
+                <input
+                  type="checkbox"
+                  id="sale"
+                  className="w-4 accent-ubOrange"
+                  checked={searchData.type === 'sale'}
+                  onChange={handleChange}
+                />
+                <label className="text-gray-700">Sale</label>
+              </div>
             </div>
-          </form>
-        </div>
+
+            {/* Amenities */}
+            <div className="flex gap-2 flex-wrap items-center">
+              <p className="font-semibold">Amenities:</p>
+              <div className="flex gap-1.5">
+                <input
+                  type="checkbox"
+                  id="parking"
+                  className="w-4 accent-ubOrange"
+                  checked={searchData.parking}
+                  onChange={handleChange}
+                />
+                <label className="text-gray-700">Parking</label>
+              </div>
+
+              <div className="flex gap-1.5">
+                <input
+                  type="checkbox"
+                  id="furnished"
+                  className="w-4 accent-ubOrange"
+                  checked={searchData.furnished}
+                  onChange={handleChange}
+                />
+                <label className="text-gray-700">Furnished</label>
+              </div>
+            </div>
+
+            {/* Others */}
+            <div className="flex gap-2 flex-wrap items-center">
+              <p className="font-semibold">Others:</p>
+              <div className="flex gap-1.5">
+                <input
+                  type="checkbox"
+                  id="offer"
+                  className="w-4 accent-ubOrange"
+                  checked={searchData.offer}
+                  onChange={handleChange}
+                />
+                <label className="text-gray-700">Offer</label>
+              </div>
+            </div>
+
+            {/* Sorting */}
+            <div className="flex items-center gap-2">
+              <p className="font-semibold">Sort:</p>
+              <select
+                onChange={handleChange}
+                defaultValue={'created_at_desc'}
+                id="sort_order"
+                className="border rounded-lg px-3 py-2 cursor-pointer"
+              >
+                <option value="regularPrice_desc">Price high to low</option>
+                <option value="regularPrice_asc">Price low to high</option>
+                <option value="createdAt_desc">Latest</option>
+                <option value="createdAt_asc">Oldest</option>
+              </select>
+            </div>
+
+            <button className="flex items-center justify-center gap-1 bg-black font-semibold tracking-wider text-white px-8 py-2 rounded-lg hover:bg-gray-800">
+              <span>Search</span>
+              <FaSearch className="w-4 h-4" />
+            </button>
+          </div>
+        </form>
 
         <div className="pt-4">
           <h1 className="text-xl font-semibold text-slate-700 my-6">

@@ -45,8 +45,6 @@ export default function FeaturedProperty() {
           ),
         ])
 
-        console.log(results)
-
         const [offerResults, rentResults, saleResults] = results
 
         if (offerResults.status === 'fulfilled' && offerResults.value.ok) {
