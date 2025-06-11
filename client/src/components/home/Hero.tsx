@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import House from '../../assets/house.png'
 import { FaSearchLocation } from 'react-icons/fa'
+import House from '../../assets/house.png'
 
 export default function Hero() {
   return (
@@ -14,18 +14,18 @@ export default function Hero() {
             <span>Where you&apos;ll love to live</span>
           </h1>
           <div>
-            <p className="text-slate-600 text-sm md:text-base">
+            <p className="text-slate-600 text-xs tracking-wide md:text-base">
               We help connecting customer and owner to find the perpect
               property.
             </p>
-            <p className="text-slate-600 text-sm md:text-base">
+            <p className="text-slate-600 text-xs tracking-wide md:text-base">
               What you are looking for is one search away.
             </p>
           </div>
-          <motion.div whileHover={{ scaleY: 1.05 }} whileTap={{ scaleY: 0.8 }}>
+          <motion.div whileTap={{ scaleY: 0.8 }}>
             <Link
               to={'/search'}
-              className="bg-black text-white mt-2 px-2.5 py-2.5 lg:px-5 lg:py-3.5 rounded-lg hover:bg-slate-900 flex items-center gap-2 w-fit"
+              className="bg-black text-white text-sm mt-2 px-2.5 py-2 md:p-3 lg:px-5 lg:py-3.5 rounded-lg hover:bg-slate-900 flex items-center gap-2 w-fit"
             >
               <span>Find your search</span>
               <FaSearchLocation />

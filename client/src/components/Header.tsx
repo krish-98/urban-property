@@ -2,7 +2,6 @@ import { FormEvent, useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { FaSearch } from 'react-icons/fa'
-
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import {
   signOutUserFailure,
@@ -74,7 +73,7 @@ export default function Header() {
     <header className="bg-white shadow-md px-4 py-4">
       <nav className="flex justify-between items-center max-w-6xl mx-auto relative">
         <Link to="/">
-          <h1 className="font-bold flex flex-wrap space-x-0.5 sm:text-xl lg:text-3xl">
+          <h1 className="font-bold flex flex-wrap space-x-0.5 tracking-tight sm:text-xl xl:text-2xl">
             <span className="text-ubOrange">Urban</span>
             <span className="text-ubBlack">Property</span>
           </h1>
@@ -86,8 +85,8 @@ export default function Header() {
         >
           <input
             type="text"
-            placeholder="Search Properties"
-            className="bg-transparent pl-1 w-24 sm:w-64 font-medium placeholder:font-medium placeholder:text-sm outline-none"
+            placeholder="Search Property"
+            className="bg-transparent pl-1 w-24 sm:w-64 font-medium outline-none placeholder:text-[12px] md:placeholder:text-[14px]"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -96,18 +95,18 @@ export default function Header() {
           </button>
         </form>
 
-        <ul className="flex items-center gap-4">
+        <ul className="flex items-center gap-4 text-sm font-medium tracking-wide xl:text-base">
           <Link to="/" className="hidden sm:inline">
-            <li className="font-medium hover:text-slate-600">Home</li>
+            <li className="hover:text-slate-600">Home</li>
           </Link>
 
           <Link to="/about" className="hidden sm:inline">
-            <li className="font-medium hover:text-slate-600">About</li>
+            <li className="hover:text-slate-600">About</li>
           </Link>
 
           {currentUser && (
             <Link to="/my-listing" className="hidden sm:inline">
-              <li className="font-medium hover:text-slate-600">My Listing</li>
+              <li className="hover:text-slate-600">My Listing</li>
             </Link>
           )}
 
@@ -122,9 +121,15 @@ export default function Header() {
               referrerPolicy="no-referrer"
             />
           ) : (
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.85 }}>
+            <motion.div
+              whileHover={{ scale: 1 }}
+              whileTap={{ scale: 0.85 }}
+              transition={{
+                duration: 1,
+              }}
+            >
               <Link to="/sign-in">
-                <li className="bg-[#1a1a1a] text-white px-3 py-1.5 rounded-lg transition-all duration-500">
+                <li className="bg-[#1a1a1a] text-white text-sm px-4 py-1 md:py-1.5 rounded-lg">
                   Sign In
                 </li>
               </Link>
