@@ -1,8 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+
 @import 'tailwindcss';
 
-/* Design */
+@layer base {
+  html {
+    font-family: 'Geist', system-ui, sans-serif;
+  }
+}
 
-/* 
+@theme inline {
+  --color-primary: var(--color-slate-950);
+  --color-secondary: var(--color-white);
+  --color-background: var();
+  --color-foreground: var();
+  --color-muted: var();
+  --color-border: var();
+  --color-accent: var();
+  --color-success: var();
+  --color-warning: var();
+  --color-danger: var();
+}
+
+/* | Role       | Meaning              |
+| ---------- | -------------------- |
+| primary    | Brand / main actions |
+| secondary  | Supporting actions   |
+| background | App background       |
+| foreground | Main text            |
+| muted      | Secondary text       |
+| border     | Dividers             |
+| accent     | Highlights           |
+| success    | Positive states      |
+| warning    | Caution              |
+| danger     | Errors               | */
+
+/* Design
 
 1. typography - font, weight
 2. color - primary, secondary, shades, hover states
